@@ -23,15 +23,19 @@ FILE *output_file; // File pointer for output
 
 %union {
     int num;
+    float numf;
     char *str;
+    int dedent;   // Añadido para representar el nivel de dedentación
+    int indent;   // Añadido para representar el nivel de indentación
 }
 
-%token <str> IDENTIFIER
-%token <num> NUMBER
-%token INT FLOAT ASSIGN SEMICOLON
+%token <str> ID
+%token <num> INT
+%token <numf> FLOAT
+%token EQ SEMICOLON
+%token INDENT DEDENT NEWLINE WHITESPACE 
 
 %type <str> statement declaration assignment expression factor
-%type <num> type
 
 %%
 
@@ -52,19 +56,14 @@ statement:
     ;
 
 declaration:
-    type IDENTIFIER SEMICOLON {
-        add_symbol($2, $1); // Add variable to the symbol table
-        fprintf(output_file, "%s %s;\n", $1 == 1 ? "int" : "float", $2);
+    ID SEMICOLON {
+
     }
     |
-    type IDENTIFIER ASSIGN expression SEMICOLON {
-        add_symbol($2, $1); // Add variable to the symbol table
-        fprintf(output_file, "%s %s = %s;\n", $1 == 1 ? "int" : "float", $2, $4);
-    }
     ;
 
 assignment:
-    IDENTIFIER ASSIGN expression {
+    ID EQ expression {
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             // Variable not found, create it
@@ -81,13 +80,19 @@ expression:
     ;
 
 factor:
-    NUMBER {
+    INT {
         char buffer[64];
         sprintf(buffer, "%d", $1);
         $$ = strdup(buffer);
     }
     |
-    IDENTIFIER {
+    FLOAT {
+        char buffer[64];
+        sprintf(buffer, "%f", $1);
+        $$ = strdup(buffer);
+    }
+    |
+    ID {
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             yyerror("Probando");
@@ -97,11 +102,6 @@ factor:
     }
     ;
 
-type:
-    INT { $$ = 1; }
-    |
-    FLOAT { $$ = 2; }
-    ;
 
 %%
 
