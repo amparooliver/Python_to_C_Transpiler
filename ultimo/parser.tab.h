@@ -91,17 +91,21 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "parser.y"
+#line 20 "parser.y"
 
     char* str_val;
     int int_val;
     float float_val;
     int dedent;   // Añadido para representar el nivel de dedentación
     int indent;   // Añadido para representar el nivel de indentación
-    statement* stmt;
-    expr* expr;
+    struct {
+        char* code;
+    } stmt;
+    struct {
+        char* code;
+    } expr;
 
-#line 105 "parser.tab.h"
+#line 109 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

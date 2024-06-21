@@ -84,16 +84,9 @@ void yyerror(char* s) {
 
 FILE* output_file;
 
-typedef struct statement {
-    char* code;
-} statement;
-
-typedef struct expr {
-    char* code;
-} expr;
 
 
-#line 97 "parser.tab.c"
+#line 90 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -546,9 +539,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    51,    51,    61,    66,    74,    80,    86,    92,   100,
-     106,   112,   117,   123,   129,   135,   141,   147,   153,   159,
-     165,   171,   177
+       0,    48,    48,    58,    63,    71,    77,    83,    89,    97,
+     103,   109,   114,   120,   126,   132,   138,   144,   150,   156,
+     162,   168,   174
 };
 #endif
 
@@ -1164,217 +1157,217 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: statements  */
-#line 51 "parser.y"
+#line 48 "parser.y"
                    {
            fprintf(output_file, "#include <stdio.h>\n\n");
            fprintf(output_file, "int main() {\n");
-           fprintf(output_file, "%s", (yyvsp[0].stmt)->code);
+           fprintf(output_file, "%s", (yyvsp[0].stmt).code);
            fprintf(output_file, "    return 0;\n");
            fprintf(output_file, "}\n");
        }
-#line 1176 "parser.tab.c"
+#line 1169 "parser.tab.c"
     break;
 
   case 3: /* statements: statement  */
-#line 61 "parser.y"
+#line 58 "parser.y"
                   {
-            (yyval.stmt) = malloc(sizeof(statement));
-            (yyval.stmt)->code = strdup((yyvsp[0].stmt).code);
+            (yyval.stmt) = malloc(sizeof(struct stmt));
+            (yyval.stmt)->stmt.code = strdup((yyvsp[0].stmt).code);
         }
-#line 1185 "parser.tab.c"
+#line 1178 "parser.tab.c"
     break;
 
   case 4: /* statements: statements statement  */
-#line 67 "parser.y"
+#line 64 "parser.y"
         {
-            (yyval.stmt) = malloc(sizeof(statement));
-            (yyval.stmt)->code = malloc(strlen((yyvsp[-1].stmt).code) + strlen((yyvsp[0].stmt).code) + 2);
+            (yyval.stmt) = malloc(sizeof(struct stmt));
+            (yyval.stmt)->stmt.code = malloc(strlen((yyvsp[-1].stmt).code) + strlen((yyvsp[0].stmt).code) + 2);
             sprintf((yyval.stmt)->code, "%s%s\n", (yyvsp[-1].stmt).code, (yyvsp[0].stmt).code);
         }
-#line 1195 "parser.tab.c"
+#line 1188 "parser.tab.c"
     break;
 
   case 5: /* statement: expr NEWLINE  */
-#line 75 "parser.y"
+#line 72 "parser.y"
         {
-            (yyval.stmt) = malloc(sizeof(statement));
-            (yyval.stmt)->code = malloc(strlen((yyvsp[-1].expr).code) + 10);
+            (yyval.stmt) = malloc(sizeof(struct stmt));
+            (yyval.stmt)->stmt.code = malloc(strlen((yyvsp[-1].expr).code) + 10);
             sprintf((yyval.stmt)->code, "    printf(\"%%d\\n\", %s);\n", (yyvsp[-1].expr).code);
         }
-#line 1205 "parser.tab.c"
+#line 1198 "parser.tab.c"
     break;
 
   case 6: /* statement: IF expr COLON NEWLINE INDENT statements DEDENT  */
-#line 81 "parser.y"
+#line 78 "parser.y"
         {
-            (yyval.stmt) = malloc(sizeof(statement));
-            (yyval.stmt)->code = malloc(strlen((yyvsp[-5].expr).code) + strlen((yyvsp[-1].stmt).code) + 50);
+            (yyval.stmt) = malloc(sizeof(struct stmt));
+            (yyval.stmt)->stmt.code = malloc(strlen((yyvsp[-5].expr).code) + strlen((yyvsp[-1].stmt).code) + 50);
             sprintf((yyval.stmt)->code, "    if (%s) {\n%s    }\n", (yyvsp[-5].expr).code, (yyvsp[-1].stmt).code);
         }
-#line 1215 "parser.tab.c"
+#line 1208 "parser.tab.c"
     break;
 
   case 7: /* statement: IF expr COLON NEWLINE INDENT statements DEDENT ELSE COLON NEWLINE INDENT statements DEDENT  */
-#line 87 "parser.y"
+#line 84 "parser.y"
         {
-            (yyval.stmt) = malloc(sizeof(statement));
-            (yyval.stmt)->code = malloc(strlen((yyvsp[-11].expr).code) + strlen((yyvsp[-7].stmt).code) + strlen((yyvsp[-1].stmt).code) + 70);
+            (yyval.stmt) = malloc(sizeof(struct stmt));
+            (yyval.stmt)->stmt.code = malloc(strlen((yyvsp[-11].expr).code) + strlen((yyvsp[-7].stmt).code) + strlen((yyvsp[-1].stmt).code) + 70);
             sprintf((yyval.stmt)->code, "    if (%s) {\n%s    } else {\n%s    }\n", (yyvsp[-11].expr).code, (yyvsp[-7].stmt).code, (yyvsp[-1].stmt).code);
         }
-#line 1225 "parser.tab.c"
+#line 1218 "parser.tab.c"
     break;
 
   case 8: /* statement: FOR ID IN RANGE LPAREN expr COMMA expr RPAREN COLON NEWLINE INDENT statements DEDENT  */
-#line 93 "parser.y"
+#line 90 "parser.y"
         {
-            (yyval.stmt) = malloc(sizeof(statement));
-            (yyval.stmt)->code = malloc(strlen((yyvsp[-12].str_val)) + strlen((yyvsp[-8].expr).code) + strlen((yyvsp[-6].expr).code) + strlen((yyvsp[-1].stmt).code) + 70);
-            sprintf((yyval.stmt)->code, "    for (int %s = %s; %s <= %s; %s++) {\n%s    }\n", (yyvsp[-12].str_val), (yyvsp[-8].expr).code, (yyvsp[-12].str_val), (yyvsp[-6].expr).code, (yyvsp[-12].str_val), (yyvsp[-1].stmt).code);
+            (yyval.stmt) = malloc(sizeof(struct stmt));
+            (yyval.stmt)->stmt.code = malloc(strlen((yyvsp[-12].str_val)) + strlen((yyvsp[-8].expr).code) + strlen((yyvsp[-6].expr).code) + strlen((yyvsp[-1].stmt).code) + 70);
+            sprintf((yyval.stmt)->stmt.code, "    for (int %s = %s; %s <= %s; %s++) {\n%s    }\n", (yyvsp[-12].str_val), (yyvsp[-8].expr).code, (yyvsp[-12].str_val), (yyvsp[-6].expr).code, (yyvsp[-12].str_val), (yyvsp[-1].stmt).code);
         }
-#line 1235 "parser.tab.c"
+#line 1228 "parser.tab.c"
     break;
 
   case 9: /* expr: INT  */
-#line 101 "parser.y"
+#line 98 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(20);
-            sprintf((yyval.expr)->code, "%d", (yyvsp[0].int_val));
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(20);
+            sprintf((yyval.expr)->expr.code, "%d", (yyvsp[0].int_val));
         }
-#line 1245 "parser.tab.c"
+#line 1238 "parser.tab.c"
     break;
 
   case 10: /* expr: FLOAT  */
-#line 107 "parser.y"
+#line 104 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(20);
-            sprintf((yyval.expr)->code, "%f", (yyvsp[0].float_val));
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(20);
+            sprintf((yyval.expr)->expr.code, "%f", (yyvsp[0].float_val));
         }
-#line 1255 "parser.tab.c"
+#line 1248 "parser.tab.c"
     break;
 
   case 11: /* expr: ID  */
-#line 113 "parser.y"
+#line 110 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = strdup((yyvsp[0].str_val));
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code= strdup((yyvsp[0].str_val));
         }
-#line 1264 "parser.tab.c"
+#line 1257 "parser.tab.c"
     break;
 
   case 12: /* expr: expr EQ expr  */
-#line 118 "parser.y"
+#line 115 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s == %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s == %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1274 "parser.tab.c"
+#line 1267 "parser.tab.c"
     break;
 
   case 13: /* expr: expr EQ EQ expr  */
-#line 124 "parser.y"
+#line 121 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-3].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s == %s", (yyvsp[-3].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-3].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s == %s", (yyvsp[-3].expr).code, (yyvsp[0].expr).code);
         }
-#line 1284 "parser.tab.c"
+#line 1277 "parser.tab.c"
     break;
 
   case 14: /* expr: expr LT expr  */
-#line 130 "parser.y"
+#line 127 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s < %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s < %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1294 "parser.tab.c"
+#line 1287 "parser.tab.c"
     break;
 
   case 15: /* expr: expr GT expr  */
-#line 136 "parser.y"
+#line 133 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s > %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s > %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1304 "parser.tab.c"
+#line 1297 "parser.tab.c"
     break;
 
   case 16: /* expr: expr LTEQ expr  */
-#line 142 "parser.y"
+#line 139 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s <= %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s <= %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1314 "parser.tab.c"
+#line 1307 "parser.tab.c"
     break;
 
   case 17: /* expr: expr GTEQ expr  */
-#line 148 "parser.y"
+#line 145 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s >= %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s >= %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1324 "parser.tab.c"
+#line 1317 "parser.tab.c"
     break;
 
   case 18: /* expr: expr PLUS expr  */
-#line 154 "parser.y"
+#line 151 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s + %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s + %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1334 "parser.tab.c"
+#line 1327 "parser.tab.c"
     break;
 
   case 19: /* expr: expr MINUS expr  */
-#line 160 "parser.y"
+#line 157 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s - %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s - %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1344 "parser.tab.c"
+#line 1337 "parser.tab.c"
     break;
 
   case 20: /* expr: expr TIMES expr  */
-#line 166 "parser.y"
+#line 163 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s * %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s * %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1354 "parser.tab.c"
+#line 1347 "parser.tab.c"
     break;
 
   case 21: /* expr: expr DIVIDE expr  */
-#line 172 "parser.y"
+#line 169 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
-            sprintf((yyval.expr)->code, "%s / %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code= malloc(strlen((yyvsp[-2].expr).code) + strlen((yyvsp[0].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "%s / %s", (yyvsp[-2].expr).code, (yyvsp[0].expr).code);
         }
-#line 1364 "parser.tab.c"
+#line 1357 "parser.tab.c"
     break;
 
   case 22: /* expr: LPAREN expr RPAREN  */
-#line 178 "parser.y"
+#line 175 "parser.y"
         {
-            (yyval.expr) = malloc(sizeof(expr));
-            (yyval.expr)->code = malloc(strlen((yyvsp[-1].expr).code) + 10);
-            sprintf((yyval.expr)->code, "(%s)", (yyvsp[-1].expr).code);
+            (yyval.expr) = malloc(sizeof(struct expr));
+            (yyval.expr)->expr.code = malloc(strlen((yyvsp[-1].expr).code) + 10);
+            sprintf((yyval.expr)->expr.code, "(%s)", (yyvsp[-1].expr).code);
         }
-#line 1374 "parser.tab.c"
+#line 1367 "parser.tab.c"
     break;
 
 
-#line 1378 "parser.tab.c"
+#line 1371 "parser.tab.c"
 
       default: break;
     }
@@ -1567,7 +1560,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 185 "parser.y"
+#line 182 "parser.y"
 
 
 int main() {

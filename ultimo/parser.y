@@ -14,13 +14,6 @@ void yyerror(char* s) {
 
 FILE* output_file;
 
-typedef struct statement {
-    char* code;
-} statement;
-
-typedef struct expr {
-    char* code;
-} expr;
 
 %}
 
@@ -30,8 +23,12 @@ typedef struct expr {
     float float_val;
     int dedent;   // Añadido para representar el nivel de dedentación
     int indent;   // Añadido para representar el nivel de indentación
-    statement* stmt;
-    expr* expr;
+    struct {
+        char* code;
+    } stmt;
+    struct {
+        char* code;
+    } expr;
 }
 
 %token <str_val> ID STRING
@@ -51,7 +48,7 @@ program:
         statements {
            fprintf(output_file, "#include <stdio.h>\n\n");
            fprintf(output_file, "int main() {\n");
-           fprintf(output_file, "%s", $1->code);
+           fprintf(output_file, "%s", $1.code);
            fprintf(output_file, "    return 0;\n");
            fprintf(output_file, "}\n");
        }
@@ -59,126 +56,126 @@ program:
 
 statements: 
         statement {
-            $$ = malloc(sizeof(statement));
-            $$->code = strdup($1.code);
+            $$ = malloc(sizeof(struct stmt));
+            $$->stmt.code = strdup($1.code);
         }
         |
         statements statement 
         {
-            $$ = malloc(sizeof(statement));
-            $$->code = malloc(strlen($1.code) + strlen($2.code) + 2);
+            $$ = malloc(sizeof(struct stmt));
+            $$->stmt.code = malloc(strlen($1.code) + strlen($2.code) + 2);
             sprintf($$->code, "%s%s\n", $1.code, $2.code);
         }
         ;
 
 statement: expr NEWLINE
         {
-            $$ = malloc(sizeof(statement));
-            $$->code = malloc(strlen($1.code) + 10);
+            $$ = malloc(sizeof(struct stmt));
+            $$->stmt.code = malloc(strlen($1.code) + 10);
             sprintf($$->code, "    printf(\"%%d\\n\", %s);\n", $1.code);
         }
         | IF expr COLON NEWLINE INDENT statements DEDENT
         {
-            $$ = malloc(sizeof(statement));
-            $$->code = malloc(strlen($2.code) + strlen($6.code) + 50);
+            $$ = malloc(sizeof(struct stmt));
+            $$->stmt.code = malloc(strlen($2.code) + strlen($6.code) + 50);
             sprintf($$->code, "    if (%s) {\n%s    }\n", $2.code, $6.code);
         }
         | IF expr COLON NEWLINE INDENT statements DEDENT ELSE COLON NEWLINE INDENT statements DEDENT
         {
-            $$ = malloc(sizeof(statement));
-            $$->code = malloc(strlen($2.code) + strlen($6.code) + strlen($12.code) + 70);
+            $$ = malloc(sizeof(struct stmt));
+            $$->stmt.code = malloc(strlen($2.code) + strlen($6.code) + strlen($12.code) + 70);
             sprintf($$->code, "    if (%s) {\n%s    } else {\n%s    }\n", $2.code, $6.code, $12.code);
         }
         | FOR ID IN RANGE LPAREN expr COMMA expr RPAREN COLON NEWLINE INDENT statements DEDENT
         {
-            $$ = malloc(sizeof(statement));
-            $$->code = malloc(strlen($2) + strlen($6.code) + strlen($8.code) + strlen($13.code) + 70);
-            sprintf($$->code, "    for (int %s = %s; %s <= %s; %s++) {\n%s    }\n", $2, $6.code, $2, $8.code, $2, $13.code);
+            $$ = malloc(sizeof(struct stmt));
+            $$->stmt.code = malloc(strlen($2) + strlen($6.code) + strlen($8.code) + strlen($13.code) + 70);
+            sprintf($$->stmt.code, "    for (int %s = %s; %s <= %s; %s++) {\n%s    }\n", $2, $6.code, $2, $8.code, $2, $13.code);
         }
         ;
 
 expr: INT
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(20);
-            sprintf($$->code, "%d", $1);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(20);
+            sprintf($$->expr.code, "%d", $1);
         }
         | FLOAT
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(20);
-            sprintf($$->code, "%f", $1);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(20);
+            sprintf($$->expr.code, "%f", $1);
         }
         | ID
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = strdup($1);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code= strdup($1);
         }
         | expr EQ expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s == %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s == %s", $1.code, $3.code);
         }
         | expr EQ EQ expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($4.code) + 10);
-            sprintf($$->code, "%s == %s", $1.code, $4.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($4.code) + 10);
+            sprintf($$->expr.code, "%s == %s", $1.code, $4.code);
         }
         | expr LT expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s < %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s < %s", $1.code, $3.code);
         }
         | expr GT expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s > %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s > %s", $1.code, $3.code);
         }
         | expr LTEQ expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s <= %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s <= %s", $1.code, $3.code);
         }
         | expr GTEQ expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s >= %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s >= %s", $1.code, $3.code);
         }
         | expr PLUS expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s + %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s + %s", $1.code, $3.code);
         }
         | expr MINUS expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s - %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s - %s", $1.code, $3.code);
         }
         | expr TIMES expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s * %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s * %s", $1.code, $3.code);
         }
         | expr DIVIDE expr
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($1.code) + strlen($3.code) + 10);
-            sprintf($$->code, "%s / %s", $1.code, $3.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code= malloc(strlen($1.code) + strlen($3.code) + 10);
+            sprintf($$->expr.code, "%s / %s", $1.code, $3.code);
         }
         | LPAREN expr RPAREN
         {
-            $$ = malloc(sizeof(expr));
-            $$->code = malloc(strlen($2.code) + 10);
-            sprintf($$->code, "(%s)", $2.code);
+            $$ = malloc(sizeof(struct expr));
+            $$->expr.code = malloc(strlen($2.code) + 10);
+            sprintf($$->expr.code, "(%s)", $2.code);
         }
         ;
 
