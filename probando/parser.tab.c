@@ -80,6 +80,7 @@ typedef struct symbol {
     char *name;
     char *type;
     struct symbol *next;
+    int indent;
 } symbol;
 
 symbol *sym_table = NULL;
@@ -90,7 +91,7 @@ void add_symbol(char *name, char *type);
 FILE *output_file; // File pointer for output
 
 
-#line 94 "parser.tab.c"
+#line 95 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -127,11 +128,22 @@ enum yysymbol_kind_t
   YYSYMBOL_INT = 6,                        /* INT  */
   YYSYMBOL_FLOAT = 7,                      /* FLOAT  */
   YYSYMBOL_EQ = 8,                         /* EQ  */
-  YYSYMBOL_YYACCEPT = 9,                   /* $accept  */
-  YYSYMBOL_program = 10,                   /* program  */
-  YYSYMBOL_statements = 11,                /* statements  */
-  YYSYMBOL_statement = 12,                 /* statement  */
-  YYSYMBOL_assignment = 13                 /* assignment  */
+  YYSYMBOL_NEWLINE = 9,                    /* NEWLINE  */
+  YYSYMBOL_WHITESPACE = 10,                /* WHITESPACE  */
+  YYSYMBOL_IF = 11,                        /* IF  */
+  YYSYMBOL_COLON = 12,                     /* COLON  */
+  YYSYMBOL_LT = 13,                        /* LT  */
+  YYSYMBOL_INDENT = 14,                    /* INDENT  */
+  YYSYMBOL_token = 15,                     /* token  */
+  YYSYMBOL_DEDENT = 16,                    /* DEDENT  */
+  YYSYMBOL_YYACCEPT = 17,                  /* $accept  */
+  YYSYMBOL_program = 18,                   /* program  */
+  YYSYMBOL_statements = 19,                /* statements  */
+  YYSYMBOL_statement = 20,                 /* statement  */
+  YYSYMBOL_assignment = 21,                /* assignment  */
+  YYSYMBOL_conditional = 22,               /* conditional  */
+  YYSYMBOL_expression = 23,                /* expression  */
+  YYSYMBOL_factor = 24                     /* factor  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -457,21 +469,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  7
+#define YYFINAL  15
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   7
+#define YYLAST   25
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  9
+#define YYNTOKENS  17
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  5
+#define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  9
+#define YYNRULES  16
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  13
+#define YYNSTATES  29
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   263
+#define YYMAXUTOK   271
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -511,14 +523,16 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    42,    42,    46,    48,    52,    56,    69,    82,    95
+       0,    48,    48,    52,    54,    58,    60,    64,    77,    90,
+     103,   116,   121,   127,   130,   136,   142
 };
 #endif
 
@@ -535,8 +549,9 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ID", "CHAR", "STRING",
-  "INT", "FLOAT", "EQ", "$accept", "program", "statements", "statement",
-  "assignment", YY_NULLPTR
+  "INT", "FLOAT", "EQ", "NEWLINE", "WHITESPACE", "IF", "COLON", "LT",
+  "INDENT", "token", "DEDENT", "$accept", "program", "statements",
+  "statement", "assignment", "conditional", "expression", "factor", YY_NULLPTR
 };
 
 static const char *
@@ -546,7 +561,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-5)
+#define YYPACT_NINF (-7)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -560,8 +575,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       1,    -3,     6,     1,    -5,    -5,    -4,    -5,    -5,    -5,
-      -5,    -5,    -5
+      -1,    -4,     0,    -7,     5,    -1,     2,    -7,    -7,    11,
+      -7,    -7,    -7,     6,    -7,    -7,    12,    -7,    -7,    -7,
+      -7,    -7,     0,    -7,     8,    -6,    -1,    -2,    -7
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -569,20 +585,21 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     2,     4,     5,     0,     1,     3,     8,
-       9,     6,     7
+       0,     0,     0,    11,     0,     2,     0,     5,     6,     0,
+      16,    14,    15,     0,    13,     1,     0,     4,     9,    10,
+       7,     8,     0,     3,     0,     0,     0,     0,    12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -5,    -5,    -5,     4,    -5
+      -7,    -7,    -3,    -5,    -7,    -7,     3,    -7
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     4,     5
+       0,     4,     5,     6,     7,     8,    13,    14
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -590,32 +607,39 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       9,    10,    11,    12,     1,     6,     7,     8
+      16,     1,     1,    10,     9,    15,    11,    12,    26,     2,
+       2,    17,     3,     3,    28,    18,    19,    20,    21,    22,
+      25,    23,    16,    27,     0,    24
 };
 
 static const yytype_int8 yycheck[] =
 {
-       4,     5,     6,     7,     3,     8,     0,     3
+       5,     3,     3,     3,     8,     0,     6,     7,    14,    11,
+      11,     9,    14,    14,    16,     4,     5,     6,     7,    13,
+      12,     9,    27,    26,    -1,    22
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    10,    11,    12,    13,     8,     0,    12,     4,
-       5,     6,     7
+       0,     3,    11,    14,    18,    19,    20,    21,    22,     8,
+       3,     6,     7,    23,    24,     0,    20,     9,     4,     5,
+       6,     7,    13,     9,    23,    12,    14,    19,    16
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     9,    10,    11,    11,    12,    13,    13,    13,    13
+       0,    17,    18,    19,    19,    20,    20,    21,    21,    21,
+      21,    21,    22,    23,    24,    24,    24
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     1,     3,     3,     3,     3
+       0,     2,     1,     3,     2,     1,     1,     3,     3,     3,
+       3,     1,     8,     1,     1,     1,     1
 };
 
 
@@ -1078,8 +1102,8 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 6: /* assignment: ID EQ INT  */
-#line 56 "parser.y"
+  case 7: /* assignment: ID EQ INT  */
+#line 64 "parser.y"
               { // ASIGNACIONES Y DECLARACIONES INT
         fprintf(stderr, "entra al int %d \n ",(yyvsp[0].int_val));
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1092,11 +1116,11 @@ yyreduce:
             fprintf(output_file, "%s = %d;\n", (yyvsp[-2].str), (yyvsp[0].int_val));
         }
     }
-#line 1096 "parser.tab.c"
+#line 1120 "parser.tab.c"
     break;
 
-  case 7: /* assignment: ID EQ FLOAT  */
-#line 69 "parser.y"
+  case 8: /* assignment: ID EQ FLOAT  */
+#line 77 "parser.y"
                 { // ASIGNACIONES Y DECLARACIONES FLOAT
         fprintf(stderr, "entra al float \n ");
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1109,11 +1133,11 @@ yyreduce:
             fprintf(output_file, "%s = %f;\n", (yyvsp[-2].str), (yyvsp[0].float_val));
         }
     }
-#line 1113 "parser.tab.c"
+#line 1137 "parser.tab.c"
     break;
 
-  case 8: /* assignment: ID EQ CHAR  */
-#line 82 "parser.y"
+  case 9: /* assignment: ID EQ CHAR  */
+#line 90 "parser.y"
                { // ASIGNACIONES Y DECLARACIONES CHAR
         fprintf(stderr, "entra al char \n ");
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1126,11 +1150,11 @@ yyreduce:
             fprintf(output_file, "%s = %s;\n", (yyvsp[-2].str), (yyvsp[0].str));
         }
     }
-#line 1130 "parser.tab.c"
+#line 1154 "parser.tab.c"
     break;
 
-  case 9: /* assignment: ID EQ STRING  */
-#line 95 "parser.y"
+  case 10: /* assignment: ID EQ STRING  */
+#line 103 "parser.y"
                  { // ASIGNACIONES Y DECLARACIONES CSTRING
         fprintf(stderr, "entra al string \n ");
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1143,11 +1167,61 @@ yyreduce:
             fprintf(output_file, "%s = %s;\n", (yyvsp[-2].str), (yyvsp[0].str));
         }
     }
-#line 1147 "parser.tab.c"
+#line 1171 "parser.tab.c"
+    break;
+
+  case 11: /* assignment: INDENT  */
+#line 116 "parser.y"
+           {
+        fprintf(stderr, "detecta indent \n ");
+    }
+#line 1179 "parser.tab.c"
+    break;
+
+  case 12: /* conditional: IF expression LT expression COLON INDENT statements DEDENT  */
+#line 121 "parser.y"
+                                                               {
+        fprintf(stderr, "entra a exp < exp : \n ");
+        fprintf(output_file, "if (%s < %s){", (yyvsp[-6].str),(yyvsp[-4].str));
+    }
+#line 1188 "parser.tab.c"
+    break;
+
+  case 14: /* factor: INT  */
+#line 130 "parser.y"
+        {
+        char buffer[64];
+        sprintf(buffer, "%d", (yyvsp[0].int_val));
+        (yyval.str) = strdup(buffer);
+    }
+#line 1198 "parser.tab.c"
+    break;
+
+  case 15: /* factor: FLOAT  */
+#line 136 "parser.y"
+          {
+        char buffer[64];
+        sprintf(buffer, "%f", (yyvsp[0].float_val));
+        (yyval.str) = strdup(buffer);
+    }
+#line 1208 "parser.tab.c"
+    break;
+
+  case 16: /* factor: ID  */
+#line 142 "parser.y"
+       {
+        symbol *sym = find_symbol((yyvsp[0].str));
+        if (sym == NULL) {
+            yyerror("Variable no definida");
+        } else {
+            (yyval.str) = (yyvsp[0].str);
+        }
+    }
+#line 1221 "parser.tab.c"
     break;
 
 
-#line 1151 "parser.tab.c"
+#line 1225 "parser.tab.c"
 
       default: break;
     }
@@ -1340,7 +1414,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 109 "parser.y"
+#line 152 "parser.y"
 
 
 void yyerror(const char *s) {

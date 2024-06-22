@@ -10,6 +10,7 @@ typedef struct symbol {
     char *name;
     char *type;
     struct symbol *next;
+    int indent;
 } symbol;
 
 symbol *sym_table = NULL;
@@ -25,14 +26,19 @@ FILE *output_file; // File pointer for output
     int int_val;
     float float_val;
     char *str;
+    int indent;
+    int dedent;
 }
 
-%token <str> ID CHAR STRING
+%token <str> ID CHAR STRING 
 %token <int_val> INT
 %token <float_val> FLOAT
-%token EQ 
+%token EQ NEWLINE WHITESPACE 
+%token IF COLON LT
+%token <indent> INDENT 
+token <dedent> DEDENT
 
-%type <str> statement assignment 
+%type <str> statement assignment conditional expression factor
 
 %start program
 
@@ -43,13 +49,15 @@ program:
     ;
 
 statements:
-    statements statement
+    statements statement NEWLINE
     |
-    statement
+    statement NEWLINE
     ;
 
 statement:
     assignment
+    |
+    conditional
     ;
 
 assignment:
@@ -102,6 +110,41 @@ assignment:
         } else {
             // Variable found, perform assignment // DEBERIA CONTROLAR SI ES STRING?
             fprintf(output_file, "%s = %s;\n", $1, $3);
+        }
+    }
+    |
+    INDENT {
+        fprintf(stderr, "detecta indent \n ");
+    }
+    ;
+conditional: 
+    IF expression LT expression COLON INDENT statements DEDENT {
+        fprintf(stderr, "entra a exp < exp : \n ");
+        fprintf(output_file, "if (%s < %s){", $2,$4);
+    }
+    ;
+expression: 
+    factor
+    ;
+factor:    
+    INT {
+        char buffer[64];
+        sprintf(buffer, "%d", $1);
+        $$ = strdup(buffer);
+    }
+    |
+    FLOAT {
+        char buffer[64];
+        sprintf(buffer, "%f", $1);
+        $$ = strdup(buffer);
+    }
+    |
+    ID {
+        symbol *sym = find_symbol($1);
+        if (sym == NULL) {
+            yyerror("Variable no definida");
+        } else {
+            $$ = $1;
         }
     }
     ;

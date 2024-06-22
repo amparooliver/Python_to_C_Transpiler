@@ -59,7 +59,15 @@ extern int yydebug;
     STRING = 260,                  /* STRING  */
     INT = 261,                     /* INT  */
     FLOAT = 262,                   /* FLOAT  */
-    EQ = 263                       /* EQ  */
+    EQ = 263,                      /* EQ  */
+    NEWLINE = 264,                 /* NEWLINE  */
+    WHITESPACE = 265,              /* WHITESPACE  */
+    IF = 266,                      /* IF  */
+    COLON = 267,                   /* COLON  */
+    LT = 268,                      /* LT  */
+    INDENT = 269,                  /* INDENT  */
+    token = 270,                   /* token  */
+    DEDENT = 271                   /* DEDENT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -68,13 +76,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "parser.y"
+#line 25 "parser.y"
 
     int int_val;
     float float_val;
     char *str;
+    int indent;
+    int dedent;
 
-#line 78 "parser.tab.h"
+#line 88 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
