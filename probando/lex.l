@@ -11,6 +11,7 @@ int indentation_level = 0;
 ^[ \t\f\r\v]+             { int level = strlen(yytext); 
                            fprintf(stderr, "espacio detectado, nivel en: %d \n ",level);
                             fprintf(stderr, "indentation_level= %d \n ", indentation_level);
+                            fprintf( stderr,"if( level %d < indentation_level %d) \n ", level, indentation_level);
                           if( level < indentation_level){
                             yylval.dedent = indentation_level - level;
                             indentation_level = level;
@@ -22,8 +23,8 @@ int indentation_level = 0;
                             fprintf(stderr, "retorna INDENT \n ");
                             return INDENT;
                           } else {
-                            fprintf(stderr, "retorna WHITESPACE \n ");
-                            return WHITESPACE;
+                            fprintf(stderr, "No hago nada misma indentacion \n ");
+                            //return WHITESPACE;
                           } 
                         }
 "="                     { return EQ; }
@@ -35,7 +36,10 @@ int indentation_level = 0;
 [0-9]+(\.[0-9]+)?       { yylval.float_val = atof(yytext); return FLOAT; }
 (\"[A-Za-z]\")          { yylval.str = strdup(yytext); return CHAR; }
 (\"[^\"]+\")            { yylval.str = strdup(yytext); return STRING; }
-
+<<EOF>>                 { 
+                          fprintf(stderr, "Fin de archivo detectado\n");
+                          return 0; // O un token especial como END_OF_FILE
+                         }
 %%
 
 int yywrap() {

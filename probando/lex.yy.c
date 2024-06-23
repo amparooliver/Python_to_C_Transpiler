@@ -750,76 +750,82 @@ YY_RULE_SETUP
 { int level = strlen(yytext); 
                            fprintf(stderr, "espacio detectado, nivel en: %d \n ",level);
                             fprintf(stderr, "indentation_level= %d \n ", indentation_level);
-                          if( level == 0){
-                            yylval.dedent = 0;
+                            fprintf( stderr,"if( level %d < indentation_level %d) \n ", level, indentation_level);
+                          if( level < indentation_level){
+                            yylval.dedent = indentation_level - level;
                             indentation_level = level;
                             fprintf(stderr, "retorna DEDENT \n ");
                             return DEDENT;
-                          }else if (level == 4){
-                            yylval.indent = 4;
+                          }else if (level > indentation_level){
+                            yylval.indent = level;
                             indentation_level = level;
                             fprintf(stderr, "retorna INDENT \n ");
                             return INDENT;
                           } else {
-                            fprintf(stderr, "retorna WHITESPACE \n ");
-                            return WHITESPACE;
+                            fprintf(stderr, "No hago nada misma indentacion \n ");
+                            //return WHITESPACE;
                           } 
                         }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 29 "lex.l"
+#line 30 "lex.l"
 { return EQ; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 30 "lex.l"
+#line 31 "lex.l"
 { return IF; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 31 "lex.l"
+#line 32 "lex.l"
 { fprintf(stderr, "retorna COLON \n "); return COLON;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 32 "lex.l"
+#line 33 "lex.l"
 { return LT; }  
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 33 "lex.l"
+#line 34 "lex.l"
 { yylval.str = strdup(yytext); return ID; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 34 "lex.l"
+#line 35 "lex.l"
 { yylval.int_val = atoi(yytext); return INT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 35 "lex.l"
+#line 36 "lex.l"
 { yylval.float_val = atof(yytext); return FLOAT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 36 "lex.l"
+#line 37 "lex.l"
 { yylval.str = strdup(yytext); return CHAR; }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 37 "lex.l"
+#line 38 "lex.l"
 { yylval.str = strdup(yytext); return STRING; }
+	YY_BREAK
+case YY_STATE_EOF(INITIAL):
+#line 39 "lex.l"
+{ 
+                          fprintf(stderr, "Fin de archivo detectado\n");
+                          return 0; // O un token especial como END_OF_FILE
+                         }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 39 "lex.l"
+#line 43 "lex.l"
 ECHO;
 	YY_BREAK
-#line 821 "lex.yy.c"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+#line 829 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1825,7 +1831,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "lex.l"
+#line 43 "lex.l"
 
 
 int yywrap() {

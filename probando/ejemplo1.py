@@ -7,3 +7,5 @@ k = "hola mundo!"
 if a < b:
     a = 5
     c = 2
+    if a < b:
+        c = 2

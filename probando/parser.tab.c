@@ -479,7 +479,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  16
+#define YYNRULES  17
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  27
 
@@ -532,8 +532,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    48,    48,    52,    54,    58,    60,    63,    76,    89,
-     102,   121,   126,   133,   136,   142,   148
+       0,    48,    48,    52,    54,    56,    60,    62,    65,    78,
+      91,   104,   123,   128,   135,   138,   144,   150
 };
 #endif
 
@@ -586,9 +586,9 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     2,     0,     5,     6,     0,
-      16,    14,    15,     0,    13,    12,     1,     0,     4,     9,
-      10,     7,     8,     0,     3,     0,    11
+       0,     0,     0,     0,     0,     2,     5,     6,     7,     0,
+      17,    15,    16,     0,    14,    13,     1,     0,     4,    10,
+      11,     8,     9,     0,     3,     0,    12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -630,15 +630,15 @@ static const yytype_int8 yystos[] =
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    18,    19,    20,    20,    21,    21,    22,    22,    22,
-      22,    23,    23,    24,    25,    25,    25
+       0,    18,    19,    20,    20,    20,    21,    21,    22,    22,
+      22,    22,    23,    23,    24,    25,    25,    25
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     3,     2,     1,     1,     3,     3,     3,
-       3,     5,     2,     1,     1,     1,     1
+       0,     2,     1,     3,     2,     1,     1,     1,     3,     3,
+       3,     3,     5,     2,     1,     1,     1,     1
 };
 
 
@@ -1101,8 +1101,8 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 7: /* assignment: ID EQ INT  */
-#line 63 "parser.y"
+  case 8: /* assignment: ID EQ INT  */
+#line 65 "parser.y"
               { // ASIGNACIONES Y DECLARACIONES INT
         fprintf(stderr, "ID EQ INT --> %s = %d \n ",(yyvsp[-2].str), (yyvsp[0].int_val));
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1118,8 +1118,8 @@ yyreduce:
 #line 1119 "parser.tab.c"
     break;
 
-  case 8: /* assignment: ID EQ FLOAT  */
-#line 76 "parser.y"
+  case 9: /* assignment: ID EQ FLOAT  */
+#line 78 "parser.y"
                 { // ASIGNACIONES Y DECLARACIONES FLOAT
         fprintf(stderr, "ID EQ FLOAT --> %s = %f \n ",(yyvsp[-2].str), (yyvsp[0].float_val));
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1135,8 +1135,8 @@ yyreduce:
 #line 1136 "parser.tab.c"
     break;
 
-  case 9: /* assignment: ID EQ CHAR  */
-#line 89 "parser.y"
+  case 10: /* assignment: ID EQ CHAR  */
+#line 91 "parser.y"
                { // ASIGNACIONES Y DECLARACIONES CHAR
         fprintf(stderr, "ID EQ CHAR --> %s = %s \n ",(yyvsp[-2].str), (yyvsp[0].str));
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1152,8 +1152,8 @@ yyreduce:
 #line 1153 "parser.tab.c"
     break;
 
-  case 10: /* assignment: ID EQ STRING  */
-#line 102 "parser.y"
+  case 11: /* assignment: ID EQ STRING  */
+#line 104 "parser.y"
                  { // ASIGNACIONES Y DECLARACIONES CSTRING
         fprintf(stderr, "ID EQ STRING --> %s = %s \n ",(yyvsp[-2].str), (yyvsp[0].str));
         symbol *sym = find_symbol((yyvsp[-2].str));
@@ -1169,8 +1169,8 @@ yyreduce:
 #line 1170 "parser.tab.c"
     break;
 
-  case 11: /* conditional: IF expression LT expression COLON  */
-#line 121 "parser.y"
+  case 12: /* conditional: IF expression LT expression COLON  */
+#line 123 "parser.y"
                                      {
         fprintf(stderr, "entra a exp < exp : \n ");
         fprintf(output_file, "if (%s < %s) {\n", (yyvsp[-3].str), (yyvsp[-1].str));
@@ -1178,8 +1178,8 @@ yyreduce:
 #line 1179 "parser.tab.c"
     break;
 
-  case 12: /* conditional: INDENT statements  */
-#line 126 "parser.y"
+  case 13: /* conditional: INDENT statements  */
+#line 128 "parser.y"
                      {
         fprintf(output_file, "} \n");
         fprintf(stderr, "entra a INDENT statements\n");
@@ -1187,8 +1187,8 @@ yyreduce:
 #line 1188 "parser.tab.c"
     break;
 
-  case 14: /* factor: INT  */
-#line 136 "parser.y"
+  case 15: /* factor: INT  */
+#line 138 "parser.y"
         {
         char buffer[64];
         sprintf(buffer, "%d", (yyvsp[0].int_val));
@@ -1197,8 +1197,8 @@ yyreduce:
 #line 1198 "parser.tab.c"
     break;
 
-  case 15: /* factor: FLOAT  */
-#line 142 "parser.y"
+  case 16: /* factor: FLOAT  */
+#line 144 "parser.y"
           {
         char buffer[64];
         sprintf(buffer, "%f", (yyvsp[0].float_val));
@@ -1207,8 +1207,8 @@ yyreduce:
 #line 1208 "parser.tab.c"
     break;
 
-  case 16: /* factor: ID  */
-#line 148 "parser.y"
+  case 17: /* factor: ID  */
+#line 150 "parser.y"
        { 
         fprintf(stderr, "entra a ID de FACTOR \n ");
         symbol *sym = find_symbol((yyvsp[0].str));
@@ -1415,7 +1415,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 159 "parser.y"
+#line 161 "parser.y"
 
 
 void yyerror(const char *s) {

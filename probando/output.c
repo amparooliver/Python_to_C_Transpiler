@@ -7,4 +7,6 @@ char k[] = "hola mundo!";
 if (a < b) {
 a = 5;
 int c = 2;
+if (a < b) {
+c = 2;
 } 
