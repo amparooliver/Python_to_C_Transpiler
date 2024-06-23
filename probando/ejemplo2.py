@@ -1,3 +1,4 @@
+    hola = 1
 a = 4
 b = 5
 a = 1
@@ -7,3 +8,4 @@ k = "hola mundo!"
 if a < b:
     a = 5
     c = 2
+s = 2

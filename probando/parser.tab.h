@@ -65,9 +65,10 @@ extern int yydebug;
     IF = 266,                      /* IF  */
     COLON = 267,                   /* COLON  */
     LT = 268,                      /* LT  */
-    INDENT = 269,                  /* INDENT  */
-    token = 270,                   /* token  */
-    DEDENT = 271                   /* DEDENT  */
+    ELSE = 269,                    /* ELSE  */
+    INDENT = 270,                  /* INDENT  */
+    token = 271,                   /* token  */
+    DEDENT = 272                   /* DEDENT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -84,7 +85,7 @@ union YYSTYPE
     int indent;
     int dedent;
 
-#line 88 "parser.tab.h"
+#line 89 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

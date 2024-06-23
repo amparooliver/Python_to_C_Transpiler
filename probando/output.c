@@ -4,3 +4,7 @@ a = 1;
 b = 3.500000;
 char h = "h";
 char k[] = "hola mundo!";
+if (a < b) {
+a = 5;
+int c = 2;
+} 

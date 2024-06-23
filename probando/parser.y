@@ -34,11 +34,11 @@ FILE *output_file; // File pointer for output
 %token <int_val> INT
 %token <float_val> FLOAT
 %token EQ NEWLINE WHITESPACE 
-%token IF COLON LT
+%token IF COLON LT ELSE
 %token <indent> INDENT 
 token <dedent> DEDENT
 
-%type <str> statement assignment conditional expression factor
+%type <str> statement assignment conditional expression factor statements
 
 %start program
 
@@ -59,10 +59,9 @@ statement:
     |
     conditional
     ;
-
 assignment:
     ID EQ INT { // ASIGNACIONES Y DECLARACIONES INT
-        fprintf(stderr, "entra al int %d \n ",$3);
+        fprintf(stderr, "ID EQ INT --> %s = %d \n ",$1, $3);
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             // Variable not found, create it
@@ -75,7 +74,7 @@ assignment:
     }
     |
     ID EQ FLOAT { // ASIGNACIONES Y DECLARACIONES FLOAT
-        fprintf(stderr, "entra al float \n ");
+        fprintf(stderr, "ID EQ FLOAT --> %s = %f \n ",$1, $3);
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             // Variable not found, create it
@@ -88,7 +87,7 @@ assignment:
     }
     |
     ID EQ CHAR { // ASIGNACIONES Y DECLARACIONES CHAR
-        fprintf(stderr, "entra al char \n ");
+        fprintf(stderr, "ID EQ CHAR --> %s = %s \n ",$1, $3);
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             // Variable not found, create it
@@ -101,7 +100,7 @@ assignment:
     }
     |
     ID EQ STRING { // ASIGNACIONES Y DECLARACIONES CSTRING
-        fprintf(stderr, "entra al string \n ");
+        fprintf(stderr, "ID EQ STRING --> %s = %s \n ",$1, $3);
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             // Variable not found, create it
@@ -112,16 +111,23 @@ assignment:
             fprintf(output_file, "%s = %s;\n", $1, $3);
         }
     }
-    |
-    INDENT {
-        fprintf(stderr, "detecta indent \n ");
-    }
     ;
+
 conditional: 
-    IF expression LT expression COLON INDENT statements DEDENT {
+    /* IF expression LT expression COLON NEWLINE INDENT statements DEDENT{
         fprintf(stderr, "entra a exp < exp : \n ");
-        fprintf(output_file, "if (%s < %s){", $2,$4);
+        fprintf(output_file, "if (%s < %s){ \n %s \n }", $2,$4,$8); 
+    } */
+    IF expression LT expression COLON{
+        fprintf(stderr, "entra a exp < exp : \n ");
+        fprintf(output_file, "if (%s < %s) {\n", $2, $4);
     }
+    |
+    INDENT statements{
+        fprintf(output_file, "} \n");
+        fprintf(stderr, "entra a INDENT statements\n");
+    }
+
     ;
 expression: 
     factor
@@ -139,7 +145,8 @@ factor:
         $$ = strdup(buffer);
     }
     |
-    ID {
+    ID { 
+        fprintf(stderr, "entra a ID de FACTOR \n ");
         symbol *sym = find_symbol($1);
         if (sym == NULL) {
             yyerror("Variable no definida");
