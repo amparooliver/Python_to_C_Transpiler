@@ -20,6 +20,8 @@ void add_symbol(char *name, char *type);
 
 FILE *output_file; // File pointer for output
 
+extern int bandera;
+
 %}
 
 %union {
@@ -36,7 +38,11 @@ FILE *output_file; // File pointer for output
 %token EQ NEWLINE WHITESPACE 
 %token IF COLON LT ELSE
 %token <indent> INDENT 
-token <dedent> DEDENT
+%token <dedent> DEDENT
+
+%token FALSE NONE TRUE AND AS ASSERT ASYNC WAIT BREAK CLASS CONTINUE DEF DEL
+%token ELIF EXCEPT FINALLY FOR FROM GLOBAL IMPORT IN IS LAMBDA NONLOCAL NOT
+%token OR PASS RAISE RETURN TRY WHILE WITH YIELD
 
 %type <str> statement assignment conditional expression factor statements
 
@@ -123,11 +129,14 @@ conditional:
         fprintf(output_file, "if (%s < %s) {\n", $2, $4);
     }
     |
-    INDENT statements{
-        fprintf(output_file, "} \n");
-        fprintf(stderr, "entra a INDENT statements\n");
+    INDENT statements DEDENT {
+        fprintf(stderr, "entra a INDENT statements DEDENT\n");
+        fprintf(stderr, "BANDERA: %d \n", bandera);
+        for (int i = 0 ; i < bandera ; i += 4){
+            fprintf(output_file, "} \n");
+            fprintf(stderr, "valor i: %d \n", i);
+        }
     }
-
     ;
 expression: 
     factor

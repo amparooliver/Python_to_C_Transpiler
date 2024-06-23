@@ -67,8 +67,40 @@ extern int yydebug;
     LT = 268,                      /* LT  */
     ELSE = 269,                    /* ELSE  */
     INDENT = 270,                  /* INDENT  */
-    token = 271,                   /* token  */
-    DEDENT = 272                   /* DEDENT  */
+    DEDENT = 271,                  /* DEDENT  */
+    FALSE = 272,                   /* FALSE  */
+    NONE = 273,                    /* NONE  */
+    TRUE = 274,                    /* TRUE  */
+    AND = 275,                     /* AND  */
+    AS = 276,                      /* AS  */
+    ASSERT = 277,                  /* ASSERT  */
+    ASYNC = 278,                   /* ASYNC  */
+    WAIT = 279,                    /* WAIT  */
+    BREAK = 280,                   /* BREAK  */
+    CLASS = 281,                   /* CLASS  */
+    CONTINUE = 282,                /* CONTINUE  */
+    DEF = 283,                     /* DEF  */
+    DEL = 284,                     /* DEL  */
+    ELIF = 285,                    /* ELIF  */
+    EXCEPT = 286,                  /* EXCEPT  */
+    FINALLY = 287,                 /* FINALLY  */
+    FOR = 288,                     /* FOR  */
+    FROM = 289,                    /* FROM  */
+    GLOBAL = 290,                  /* GLOBAL  */
+    IMPORT = 291,                  /* IMPORT  */
+    IN = 292,                      /* IN  */
+    IS = 293,                      /* IS  */
+    LAMBDA = 294,                  /* LAMBDA  */
+    NONLOCAL = 295,                /* NONLOCAL  */
+    NOT = 296,                     /* NOT  */
+    OR = 297,                      /* OR  */
+    PASS = 298,                    /* PASS  */
+    RAISE = 299,                   /* RAISE  */
+    RETURN = 300,                  /* RETURN  */
+    TRY = 301,                     /* TRY  */
+    WHILE = 302,                   /* WHILE  */
+    WITH = 303,                    /* WITH  */
+    YIELD = 304                    /* YIELD  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -77,7 +109,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "parser.y"
+#line 27 "parser.y"
 
     int int_val;
     float float_val;
@@ -85,7 +117,7 @@ union YYSTYPE
     int indent;
     int dedent;
 
-#line 89 "parser.tab.h"
+#line 121 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
