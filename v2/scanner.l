@@ -160,14 +160,14 @@ std::stack<int> _indent_stack;
 
 "True"      { 
              yylval.str = new std::string("true", yyleng);
-              PUSH_TOKEN(BOOLEAN);
-              //std::cout << "BOOLEAN\t\t" << true << std::endl;
+              PUSH_TOKEN(TBOOLEAN);
+              //std::cout << "TBOOLEAN\t\t" << true << std::endl;
                }
 
 "False"     { 
               yylval.str = new std::string("false", yyleng);
-              PUSH_TOKEN(BOOLEAN);
-              //std::cout << "BOOLEAN\t\t" << false << std::endl;
+              PUSH_TOKEN(FBOOLEAN);
+              //std::cout << "FBOOLEAN\t\t" << false << std::endl;
                }
 
 [a-zA-Z_][a-zA-Z0-9_]*  {

@@ -1,6 +1,6 @@
-#line 2 "scanner.cpp"
+#line 2 "scanner-push.cpp"
 
-#line 4 "scanner.cpp"
+#line 4 "scanner-push.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -691,8 +691,8 @@ yypstate* pstate = yypstate_new();
 
 
 std::stack<int> _indent_stack;
-#line 695 "scanner.cpp"
-#line 696 "scanner.cpp"
+#line 695 "scanner-push.cpp"
+#line 696 "scanner-push.cpp"
 
 #define INITIAL 0
 
@@ -929,7 +929,7 @@ YY_DECL
   }
 
 
-#line 933 "scanner.cpp"
+#line 933 "scanner-push.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1175,7 +1175,7 @@ YY_RULE_SETUP
 #line 162 "scanner.l"
 { 
              yylval.str = new std::string("true", yyleng);
-              PUSH_TOKEN(TBOOLEAN);
+              PUSH_TOKEN(BOOLEAN);
               //std::cout << "TBOOLEAN\t\t" << true << std::endl;
                }
 	YY_BREAK
@@ -1184,7 +1184,7 @@ YY_RULE_SETUP
 #line 168 "scanner.l"
 { 
               yylval.str = new std::string("false", yyleng);
-              PUSH_TOKEN(FBOOLEAN);
+              PUSH_TOKEN(BOOLEAN);
               //std::cout << "FBOOLEAN\t\t" << false << std::endl;
                }
 	YY_BREAK
@@ -1359,7 +1359,7 @@ YY_RULE_SETUP
 #line 271 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1363 "scanner.cpp"
+#line 1363 "scanner-push.cpp"
 
 	case YY_END_OF_BUFFER:
 		{

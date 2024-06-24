@@ -2,10 +2,15 @@
 
 int main() {
 
-
-int n = 6;
-int f0 = 0;
-float f1 = 1.5;
-char hola_var[] = "Hola!";
+int puntaje = 91;
+char nota_final[] = "No sacaste cinco";
+char le_quiero_al_alumno[] = "No";
+if(puntaje >= 90) {
+if(le_quiero_al_alumno == "Si") {
+nota_final = "FELICIDADES!! Sacaste un 5!!";
+} else {
+nota_final = "Sacaste un 5 Juan, chau, no te quiero ver mas";
+}
+}
 
 }

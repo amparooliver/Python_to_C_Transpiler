@@ -29,7 +29,7 @@ int bandera = 0;
 %define api.pure full
 %define api.push-pull push
 
-%token <str> IDENTIFIER INTEGER BOOLEAN FLOAT STRING
+%token <str> IDENTIFIER INTEGER TBOOLEAN FBOOLEAN FLOAT STRING
 %token <token> EQUALS PLUS MINUS TIMES DIVIDEDBY
 %token <token> EQ NEQ GT GTE LT LTE RETURN
 %token <token> INDENT DEDENT NEWLINE IF COLON
@@ -63,14 +63,14 @@ statement
   | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;}
   | DEDENT { $$ = new std::string("}"); }
   | INDENT statement {$$ = new std::string(*$2); delete $2; }
-  | INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }
+  /*| INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }*/
   | INDENT flowcontrol NEWLINE DEDENT DEDENT { $$ = new std::string(*$2 + "; \n}\n}\n"); delete $2; }
   | IDENTIFIER EQUALS expression NEWLINE {
         // Si no existe el id, se genera una declaracion
         if (symbol_table.find(*$1) == symbol_table.end()) {
             // Determina el tipo del identificador
             std::string type;
-            if (bandera == 1) type = "int";
+            if (bandera == 1 | bandera == 6 ) type = "int";
             else if (bandera == 2) type = "float";
             else if (bandera == 3) type = "bool";
             else if (bandera == 4) type = "char";
@@ -91,7 +91,7 @@ statement
                 ss << type << " " << *$1 << " = " << *$3 << ";\n";
                 $$ = new std::string(ss.str());
             }
- 
+            bandera = 0;
 
         } else {
             // Si el identificador ya existe en la tabla de símbolos, asigna la expresión al identificador existente
@@ -106,8 +106,9 @@ statement
 expression
   : INTEGER { bandera = 1; $$ = $1; }
   | FLOAT { bandera = 2; $$ = $1; }
-  | BOOLEAN { bandera = 3; $$ = $1; }
-  | IDENTIFIER {$$ = $1; }
+  | TBOOLEAN { bandera = 3; $$ = $1; }
+  | FBOOLEAN { bandera = 3; $$ = $1; }
+  | IDENTIFIER {bandera = 6;$$ = $1; }
   | STRING {  bandera = 4; $$ = $1; }
   | LPAREN expression RPAREN {  $$ = new std::string("(" + *$2 + ")"); delete $2;}
   | expression PLUS expression { $$ =  new std::string(*$1 + " + " + *$3); delete $1; delete $3;} 
@@ -128,7 +129,9 @@ conditionalExpr
   : IDENTIFIER { $$ = $1; }
   | INTEGER { $$ = $1; }
   | FLOAT { $$ = $1; }
-  | BOOLEAN { $$ = $1; }
+  | TBOOLEAN { $$ = $1; }
+  | FBOOLEAN { $$ = $1; }
+  | STRING { $$ = $1; }
   | conditionalExpr LT conditionalExpr { $$ = new std::string(*$1 + " < " + *$3);  delete $1; delete $3;}
   | conditionalExpr GT conditionalExpr { 
                                         $$ = new std::string(*$1 + " > " + *$3);

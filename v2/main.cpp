@@ -22,8 +22,6 @@ int main(int argc, char const *argv[]) {
         std::cout << "#include <iostream>\n\n";
         std::cout << "int main() {\n\n";
 
-        std::cout << "\n";
-
         // Imprimir el código generado por Bison (goalStr)
         std::cout << *goalStr << "\n";
 
