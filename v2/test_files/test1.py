@@ -1,5 +1,5 @@
-# This program computes and returns the n'th Fibonacci number.
+# Asignaciones validas
 n = 6
 f0 = 0
 f1 = 1.5
-i = 0
+hola_var = "Hola!"

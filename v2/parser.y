@@ -84,8 +84,15 @@ statement
             symbol_table[*$1] = type;
             // Construye la cadena de asignación para el output.c
             std::stringstream ss;
-            ss << type << " " << *$1 << " = " << *$3 << ";\n";
-            $$ = new std::string(ss.str());
+            if (type == "char"){
+                ss << type << " " << *$1 << "[] = " << *$3 << ";\n";
+                $$ = new std::string(ss.str());
+            }else{
+                ss << type << " " << *$1 << " = " << *$3 << ";\n";
+                $$ = new std::string(ss.str());
+            }
+ 
+
         } else {
             // Si el identificador ya existe en la tabla de símbolos, asigna la expresión al identificador existente
             $$ = new std::string(*$1 + " = " + *$3 + ";\n");

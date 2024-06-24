@@ -535,10 +535,10 @@ static const yytype_int8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    51,    51,    54,    58,    62,    63,    64,    65,    66,
-      67,    68,   100,   101,   102,   103,   104,   105,   106,   107,
-     108,   109,   110,   113,   114,   117,   118,   121,   122,   123,
-     124,   125,   126,   130,   131,   132,   133,   137,   138,   142,
-     144,   148
+      67,    68,   107,   108,   109,   110,   111,   112,   113,   114,
+     115,   116,   117,   120,   121,   124,   125,   128,   129,   130,
+     131,   132,   133,   137,   138,   139,   140,   144,   145,   149,
+     151,   155
 };
 #endif
 
@@ -1449,8 +1449,15 @@ yyreduce:
             symbol_table[*(yyvsp[-3].str)] = type;
             // Construye la cadena de asignación para el output.c
             std::stringstream ss;
-            ss << type << " " << *(yyvsp[-3].str) << " = " << *(yyvsp[-1].str) << ";\n";
-            (yyval.str) = new std::string(ss.str());
+            if (type == "char"){
+                ss << type << " " << *(yyvsp[-3].str) << "[] = " << *(yyvsp[-1].str) << ";\n";
+                (yyval.str) = new std::string(ss.str());
+            }else{
+                ss << type << " " << *(yyvsp[-3].str) << " = " << *(yyvsp[-1].str) << ";\n";
+                (yyval.str) = new std::string(ss.str());
+            }
+ 
+
         } else {
             // Si el identificador ya existe en la tabla de símbolos, asigna la expresión al identificador existente
             (yyval.str) = new std::string(*(yyvsp[-3].str) + " = " + *(yyvsp[-1].str) + ";\n");
@@ -1459,189 +1466,189 @@ yyreduce:
         // Limpia la memoria de los punteros utilizados
         delete (yyvsp[-3].str); delete (yyvsp[-1].str);
     }
-#line 1463 "parser.cpp"
+#line 1470 "parser.cpp"
     break;
 
   case 12: /* expression: INTEGER  */
-#line 100 "parser.y"
+#line 107 "parser.y"
             { bandera = 1; (yyval.str) = (yyvsp[0].str); }
-#line 1469 "parser.cpp"
+#line 1476 "parser.cpp"
     break;
 
   case 13: /* expression: FLOAT  */
-#line 101 "parser.y"
+#line 108 "parser.y"
           { bandera = 2; (yyval.str) = (yyvsp[0].str); }
-#line 1475 "parser.cpp"
+#line 1482 "parser.cpp"
     break;
 
   case 14: /* expression: BOOLEAN  */
-#line 102 "parser.y"
+#line 109 "parser.y"
             { bandera = 3; (yyval.str) = (yyvsp[0].str); }
-#line 1481 "parser.cpp"
+#line 1488 "parser.cpp"
     break;
 
   case 15: /* expression: IDENTIFIER  */
-#line 103 "parser.y"
+#line 110 "parser.y"
                {(yyval.str) = (yyvsp[0].str); }
-#line 1487 "parser.cpp"
+#line 1494 "parser.cpp"
     break;
 
   case 16: /* expression: STRING  */
-#line 104 "parser.y"
+#line 111 "parser.y"
            {  bandera = 4; (yyval.str) = (yyvsp[0].str); }
-#line 1493 "parser.cpp"
+#line 1500 "parser.cpp"
     break;
 
   case 17: /* expression: LPAREN expression RPAREN  */
-#line 105 "parser.y"
+#line 112 "parser.y"
                              {  (yyval.str) = new std::string("(" + *(yyvsp[-1].str) + ")"); delete (yyvsp[-1].str);}
-#line 1499 "parser.cpp"
+#line 1506 "parser.cpp"
     break;
 
   case 18: /* expression: expression PLUS expression  */
-#line 106 "parser.y"
+#line 113 "parser.y"
                                { (yyval.str) =  new std::string(*(yyvsp[-2].str) + " + " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1505 "parser.cpp"
+#line 1512 "parser.cpp"
     break;
 
   case 19: /* expression: expression MINUS expression  */
-#line 107 "parser.y"
+#line 114 "parser.y"
                                 { (yyval.str) =  new std::string(*(yyvsp[-2].str) + " - " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1511 "parser.cpp"
+#line 1518 "parser.cpp"
     break;
 
   case 20: /* expression: expression TIMES expression  */
-#line 108 "parser.y"
+#line 115 "parser.y"
                                 { (yyval.str) =  new std::string(*(yyvsp[-2].str) + " * " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1517 "parser.cpp"
+#line 1524 "parser.cpp"
     break;
 
   case 21: /* expression: expression DIVIDEDBY expression  */
-#line 109 "parser.y"
+#line 116 "parser.y"
                                     { (yyval.str) =  new std::string(*(yyvsp[-2].str) + " / " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1523 "parser.cpp"
+#line 1530 "parser.cpp"
     break;
 
   case 22: /* expression: list  */
-#line 110 "parser.y"
+#line 117 "parser.y"
          { bandera = 5; (yyval.str) = (yyvsp[0].str); }
-#line 1529 "parser.cpp"
+#line 1536 "parser.cpp"
     break;
 
   case 23: /* list: LBRACK RBRACK  */
-#line 113 "parser.y"
+#line 120 "parser.y"
                   { (yyval.str) = new std::string("[]"); }
-#line 1535 "parser.cpp"
+#line 1542 "parser.cpp"
     break;
 
   case 24: /* list: LBRACK elements RBRACK  */
-#line 114 "parser.y"
+#line 121 "parser.y"
                            { (yyval.str) = new std::string("[" + *(yyvsp[-1].str) + "]"); delete (yyvsp[-1].str); }
-#line 1541 "parser.cpp"
+#line 1548 "parser.cpp"
     break;
 
   case 25: /* elements: expression  */
-#line 117 "parser.y"
+#line 124 "parser.y"
                { (yyval.str) = new std::string(*(yyvsp[0].str)); delete (yyvsp[0].str); }
-#line 1547 "parser.cpp"
+#line 1554 "parser.cpp"
     break;
 
   case 26: /* elements: elements COMMA expression  */
-#line 118 "parser.y"
+#line 125 "parser.y"
                               { (yyval.str) = new std::string(*(yyvsp[-2].str) + ", " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str); }
-#line 1553 "parser.cpp"
+#line 1560 "parser.cpp"
     break;
 
   case 27: /* conditionalExpr: IDENTIFIER  */
-#line 121 "parser.y"
+#line 128 "parser.y"
                { (yyval.str) = (yyvsp[0].str); }
-#line 1559 "parser.cpp"
+#line 1566 "parser.cpp"
     break;
 
   case 28: /* conditionalExpr: INTEGER  */
-#line 122 "parser.y"
+#line 129 "parser.y"
             { (yyval.str) = (yyvsp[0].str); }
-#line 1565 "parser.cpp"
+#line 1572 "parser.cpp"
     break;
 
   case 29: /* conditionalExpr: FLOAT  */
-#line 123 "parser.y"
+#line 130 "parser.y"
           { (yyval.str) = (yyvsp[0].str); }
-#line 1571 "parser.cpp"
+#line 1578 "parser.cpp"
     break;
 
   case 30: /* conditionalExpr: BOOLEAN  */
-#line 124 "parser.y"
+#line 131 "parser.y"
             { (yyval.str) = (yyvsp[0].str); }
-#line 1577 "parser.cpp"
+#line 1584 "parser.cpp"
     break;
 
   case 31: /* conditionalExpr: conditionalExpr LT conditionalExpr  */
-#line 125 "parser.y"
+#line 132 "parser.y"
                                        { (yyval.str) = new std::string(*(yyvsp[-2].str) + " < " + *(yyvsp[0].str));  delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1583 "parser.cpp"
+#line 1590 "parser.cpp"
     break;
 
   case 32: /* conditionalExpr: conditionalExpr GT conditionalExpr  */
-#line 126 "parser.y"
+#line 133 "parser.y"
                                        { 
                                         (yyval.str) = new std::string(*(yyvsp[-2].str) + " > " + *(yyvsp[0].str));
                                         delete (yyvsp[-2].str); delete (yyvsp[0].str);
                                       }
-#line 1592 "parser.cpp"
+#line 1599 "parser.cpp"
     break;
 
   case 33: /* conditionalExpr: conditionalExpr LTE conditionalExpr  */
-#line 130 "parser.y"
+#line 137 "parser.y"
                                         {  (yyval.str) = new std::string(*(yyvsp[-2].str) + " <= " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1598 "parser.cpp"
+#line 1605 "parser.cpp"
     break;
 
   case 34: /* conditionalExpr: conditionalExpr GTE conditionalExpr  */
-#line 131 "parser.y"
+#line 138 "parser.y"
                                         {  (yyval.str) = new std::string(*(yyvsp[-2].str) + " >= " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1604 "parser.cpp"
+#line 1611 "parser.cpp"
     break;
 
   case 35: /* conditionalExpr: conditionalExpr NEQ conditionalExpr  */
-#line 132 "parser.y"
+#line 139 "parser.y"
                                         {  (yyval.str) = new std::string(*(yyvsp[-2].str) + " != " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1610 "parser.cpp"
+#line 1617 "parser.cpp"
     break;
 
   case 36: /* conditionalExpr: conditionalExpr EQ conditionalExpr  */
-#line 133 "parser.y"
+#line 140 "parser.y"
                                        {  (yyval.str) = new std::string(*(yyvsp[-2].str) + " == " + *(yyvsp[0].str)); delete (yyvsp[-2].str); delete (yyvsp[0].str);}
-#line 1616 "parser.cpp"
+#line 1623 "parser.cpp"
     break;
 
   case 38: /* conditional: WHILE conditionalExpr COLON NEWLINE  */
-#line 138 "parser.y"
+#line 145 "parser.y"
                                         { (yyval.str) = new std::string("while (" + *(yyvsp[-2].str) + ") {\n"); delete (yyvsp[-2].str);}
-#line 1622 "parser.cpp"
-    break;
-
-  case 39: /* ifelse: IF conditionalExpr COLON NEWLINE  */
-#line 142 "parser.y"
-                                     {  (yyval.str) = new std::string("if(" + *(yyvsp[-2].str) + ") {\n"); delete (yyvsp[-2].str);
-                                }
 #line 1629 "parser.cpp"
     break;
 
+  case 39: /* ifelse: IF conditionalExpr COLON NEWLINE  */
+#line 149 "parser.y"
+                                     {  (yyval.str) = new std::string("if(" + *(yyvsp[-2].str) + ") {\n"); delete (yyvsp[-2].str);
+                                }
+#line 1636 "parser.cpp"
+    break;
+
   case 40: /* ifelse: ELSE COLON NEWLINE  */
-#line 144 "parser.y"
+#line 151 "parser.y"
                        { (yyval.str) = new std::string("else {"); }
-#line 1635 "parser.cpp"
+#line 1642 "parser.cpp"
     break;
 
   case 41: /* flowcontrol: BREAK  */
-#line 148 "parser.y"
+#line 155 "parser.y"
           { (yyval.str) = new std::string("break"); }
-#line 1641 "parser.cpp"
+#line 1648 "parser.cpp"
     break;
 
 
-#line 1645 "parser.cpp"
+#line 1652 "parser.cpp"
 
       default: break;
     }
@@ -1855,7 +1862,7 @@ yypushreturn:
 #undef yyls
 #undef yylsp
 #undef yystacksize
-#line 151 "parser.y"
+#line 158 "parser.y"
 
 
 void yyerror(YYLTYPE* loc, const char* err) {
