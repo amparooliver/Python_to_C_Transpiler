@@ -1,0 +1,1073 @@
+Terminals unused in grammar
+
+    RETURN
+    AND
+    DEF
+    ELIF
+    FOR
+    NOT
+    OR
+    SEMICOLON
+
+
+State 3 conflicts: 3 shift/reduce
+State 14 conflicts: 1 shift/reduce
+State 59 conflicts: 6 shift/reduce
+State 60 conflicts: 6 shift/reduce
+State 61 conflicts: 6 shift/reduce
+State 62 conflicts: 6 shift/reduce
+State 63 conflicts: 6 shift/reduce
+State 64 conflicts: 6 shift/reduce
+
+
+Grammar
+
+    0 $accept: goal $end
+
+    1 goal: program
+
+    2 program: program statement
+    3        | statement
+
+    4 statement: conditional
+    5          | DEDENT conditional statement DEDENT DEDENT
+    6          | DEDENT
+    7          | INDENT statement
+    8          | INDENT statement INDENT statement
+    9          | INDENT flowcontrol NEWLINE DEDENT DEDENT
+   10          | IDENTIFIER EQUALS expression NEWLINE
+
+   11 expression: INTEGER
+   12           | FLOAT
+   13           | BOOLEAN
+   14           | IDENTIFIER
+   15           | STRING
+   16           | LPAREN expression RPAREN
+   17           | expression PLUS expression
+   18           | expression MINUS expression
+   19           | expression TIMES expression
+   20           | expression DIVIDEDBY expression
+   21           | list
+
+   22 list: LBRACK RBRACK
+   23     | LBRACK elements RBRACK
+
+   24 elements: expression
+   25         | elements COMMA expression
+
+   26 conditionalExpr: IDENTIFIER
+   27                | INTEGER
+   28                | FLOAT
+   29                | BOOLEAN
+   30                | conditionalExpr LT conditionalExpr
+   31                | conditionalExpr GT conditionalExpr
+   32                | conditionalExpr LTE conditionalExpr
+   33                | conditionalExpr GTE conditionalExpr
+   34                | conditionalExpr NEQ conditionalExpr
+   35                | conditionalExpr EQ conditionalExpr
+
+   36 conditional: ifelse
+   37            | WHILE conditionalExpr COLON NEWLINE
+
+   38 ifelse: IF conditionalExpr COLON NEWLINE
+   39       | ELSE COLON NEWLINE
+
+   40 flowcontrol: BREAK
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    IDENTIFIER <str> (258) 10 14 26
+    INTEGER <str> (259) 11 27
+    BOOLEAN <str> (260) 13 29
+    FLOAT <str> (261) 12 28
+    STRING <str> (262) 15
+    EQUALS <token> (263) 10
+    PLUS <token> (264) 17
+    MINUS <token> (265) 18
+    TIMES <token> (266) 19
+    DIVIDEDBY <token> (267) 20
+    EQ <token> (268) 35
+    NEQ <token> (269) 34
+    GT <token> (270) 31
+    GTE <token> (271) 33
+    LT <token> (272) 30
+    LTE <token> (273) 32
+    RETURN <token> (274)
+    INDENT <token> (275) 7 8 9
+    DEDENT <token> (276) 5 6 9
+    NEWLINE <token> (277) 9 10 37 38 39
+    IF <token> (278) 38
+    COLON <token> (279) 37 38 39
+    AND <token> (280)
+    BREAK <token> (281) 40
+    DEF <token> (282)
+    ELIF <token> (283)
+    ELSE <token> (284) 39
+    FOR <token> (285)
+    NOT <token> (286)
+    OR <token> (287)
+    WHILE <token> (288) 37
+    SEMICOLON <token> (289)
+    LPAREN <token> (290) 16
+    RPAREN <token> (291) 16
+    COMMA <token> (292) 25
+    LBRACK <token> (293) 22 23
+    RBRACK <token> (294) 22 23
+
+
+Nonterminals, with rules where they appear
+
+    $accept (40)
+        on left: 0
+    goal (41)
+        on left: 1
+        on right: 0
+    program <str> (42)
+        on left: 2 3
+        on right: 1 2
+    statement <str> (43)
+        on left: 4 5 6 7 8 9 10
+        on right: 2 3 5 7 8
+    expression <str> (44)
+        on left: 11 12 13 14 15 16 17 18 19 20 21
+        on right: 10 16 17 18 19 20 24 25
+    list <str> (45)
+        on left: 22 23
+        on right: 21
+    elements <str> (46)
+        on left: 24 25
+        on right: 23 25
+    conditionalExpr <str> (47)
+        on left: 26 27 28 29 30 31 32 33 34 35
+        on right: 30 31 32 33 34 35 37 38
+    conditional <str> (48)
+        on left: 36 37
+        on right: 4 5
+    ifelse <str> (49)
+        on left: 38 39
+        on right: 36
+    flowcontrol <str> (50)
+        on left: 40
+        on right: 9
+
+
+State 0
+
+    0 $accept: • goal $end
+
+    IDENTIFIER  shift, and go to state 1
+    INDENT      shift, and go to state 2
+    DEDENT      shift, and go to state 3
+    IF          shift, and go to state 4
+    ELSE        shift, and go to state 5
+    WHILE       shift, and go to state 6
+
+    goal         go to state 7
+    program      go to state 8
+    statement    go to state 9
+    conditional  go to state 10
+    ifelse       go to state 11
+
+
+State 1
+
+   10 statement: IDENTIFIER • EQUALS expression NEWLINE
+
+    EQUALS  shift, and go to state 12
+
+
+State 2
+
+    7 statement: INDENT • statement
+    8          | INDENT • statement INDENT statement
+    9          | INDENT • flowcontrol NEWLINE DEDENT DEDENT
+
+    IDENTIFIER  shift, and go to state 1
+    INDENT      shift, and go to state 2
+    DEDENT      shift, and go to state 3
+    IF          shift, and go to state 4
+    BREAK       shift, and go to state 13
+    ELSE        shift, and go to state 5
+    WHILE       shift, and go to state 6
+
+    statement    go to state 14
+    conditional  go to state 10
+    ifelse       go to state 11
+    flowcontrol  go to state 15
+
+
+State 3
+
+    5 statement: DEDENT • conditional statement DEDENT DEDENT
+    6          | DEDENT •
+
+    IF     shift, and go to state 4
+    ELSE   shift, and go to state 5
+    WHILE  shift, and go to state 6
+
+    IF        [reduce using rule 6 (statement)]
+    ELSE      [reduce using rule 6 (statement)]
+    WHILE     [reduce using rule 6 (statement)]
+    $default  reduce using rule 6 (statement)
+
+    conditional  go to state 16
+    ifelse       go to state 11
+
+
+State 4
+
+   38 ifelse: IF • conditionalExpr COLON NEWLINE
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 21
+
+
+State 5
+
+   39 ifelse: ELSE • COLON NEWLINE
+
+    COLON  shift, and go to state 22
+
+
+State 6
+
+   37 conditional: WHILE • conditionalExpr COLON NEWLINE
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 23
+
+
+State 7
+
+    0 $accept: goal • $end
+
+    $end  shift, and go to state 24
+
+
+State 8
+
+    1 goal: program •
+    2 program: program • statement
+
+    IDENTIFIER  shift, and go to state 1
+    INDENT      shift, and go to state 2
+    DEDENT      shift, and go to state 3
+    IF          shift, and go to state 4
+    ELSE        shift, and go to state 5
+    WHILE       shift, and go to state 6
+
+    $default  reduce using rule 1 (goal)
+
+    statement    go to state 25
+    conditional  go to state 10
+    ifelse       go to state 11
+
+
+State 9
+
+    3 program: statement •
+
+    $default  reduce using rule 3 (program)
+
+
+State 10
+
+    4 statement: conditional •
+
+    $default  reduce using rule 4 (statement)
+
+
+State 11
+
+   36 conditional: ifelse •
+
+    $default  reduce using rule 36 (conditional)
+
+
+State 12
+
+   10 statement: IDENTIFIER EQUALS • expression NEWLINE
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 33
+    list        go to state 34
+
+
+State 13
+
+   40 flowcontrol: BREAK •
+
+    $default  reduce using rule 40 (flowcontrol)
+
+
+State 14
+
+    7 statement: INDENT statement •
+    8          | INDENT statement • INDENT statement
+
+    INDENT  shift, and go to state 35
+
+    INDENT    [reduce using rule 7 (statement)]
+    $default  reduce using rule 7 (statement)
+
+
+State 15
+
+    9 statement: INDENT flowcontrol • NEWLINE DEDENT DEDENT
+
+    NEWLINE  shift, and go to state 36
+
+
+State 16
+
+    5 statement: DEDENT conditional • statement DEDENT DEDENT
+
+    IDENTIFIER  shift, and go to state 1
+    INDENT      shift, and go to state 2
+    DEDENT      shift, and go to state 3
+    IF          shift, and go to state 4
+    ELSE        shift, and go to state 5
+    WHILE       shift, and go to state 6
+
+    statement    go to state 37
+    conditional  go to state 10
+    ifelse       go to state 11
+
+
+State 17
+
+   26 conditionalExpr: IDENTIFIER •
+
+    $default  reduce using rule 26 (conditionalExpr)
+
+
+State 18
+
+   27 conditionalExpr: INTEGER •
+
+    $default  reduce using rule 27 (conditionalExpr)
+
+
+State 19
+
+   29 conditionalExpr: BOOLEAN •
+
+    $default  reduce using rule 29 (conditionalExpr)
+
+
+State 20
+
+   28 conditionalExpr: FLOAT •
+
+    $default  reduce using rule 28 (conditionalExpr)
+
+
+State 21
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+   38 ifelse: IF conditionalExpr • COLON NEWLINE
+
+    EQ     shift, and go to state 38
+    NEQ    shift, and go to state 39
+    GT     shift, and go to state 40
+    GTE    shift, and go to state 41
+    LT     shift, and go to state 42
+    LTE    shift, and go to state 43
+    COLON  shift, and go to state 44
+
+
+State 22
+
+   39 ifelse: ELSE COLON • NEWLINE
+
+    NEWLINE  shift, and go to state 45
+
+
+State 23
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+   37 conditional: WHILE conditionalExpr • COLON NEWLINE
+
+    EQ     shift, and go to state 38
+    NEQ    shift, and go to state 39
+    GT     shift, and go to state 40
+    GTE    shift, and go to state 41
+    LT     shift, and go to state 42
+    LTE    shift, and go to state 43
+    COLON  shift, and go to state 46
+
+
+State 24
+
+    0 $accept: goal $end •
+
+    $default  accept
+
+
+State 25
+
+    2 program: program statement •
+
+    $default  reduce using rule 2 (program)
+
+
+State 26
+
+   14 expression: IDENTIFIER •
+
+    $default  reduce using rule 14 (expression)
+
+
+State 27
+
+   11 expression: INTEGER •
+
+    $default  reduce using rule 11 (expression)
+
+
+State 28
+
+   13 expression: BOOLEAN •
+
+    $default  reduce using rule 13 (expression)
+
+
+State 29
+
+   12 expression: FLOAT •
+
+    $default  reduce using rule 12 (expression)
+
+
+State 30
+
+   15 expression: STRING •
+
+    $default  reduce using rule 15 (expression)
+
+
+State 31
+
+   16 expression: LPAREN • expression RPAREN
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 47
+    list        go to state 34
+
+
+State 32
+
+   22 list: LBRACK • RBRACK
+   23     | LBRACK • elements RBRACK
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+    RBRACK      shift, and go to state 48
+
+    expression  go to state 49
+    list        go to state 34
+    elements    go to state 50
+
+
+State 33
+
+   10 statement: IDENTIFIER EQUALS expression • NEWLINE
+   17 expression: expression • PLUS expression
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+
+    PLUS       shift, and go to state 51
+    MINUS      shift, and go to state 52
+    TIMES      shift, and go to state 53
+    DIVIDEDBY  shift, and go to state 54
+    NEWLINE    shift, and go to state 55
+
+
+State 34
+
+   21 expression: list •
+
+    $default  reduce using rule 21 (expression)
+
+
+State 35
+
+    8 statement: INDENT statement INDENT • statement
+
+    IDENTIFIER  shift, and go to state 1
+    INDENT      shift, and go to state 2
+    DEDENT      shift, and go to state 3
+    IF          shift, and go to state 4
+    ELSE        shift, and go to state 5
+    WHILE       shift, and go to state 6
+
+    statement    go to state 56
+    conditional  go to state 10
+    ifelse       go to state 11
+
+
+State 36
+
+    9 statement: INDENT flowcontrol NEWLINE • DEDENT DEDENT
+
+    DEDENT  shift, and go to state 57
+
+
+State 37
+
+    5 statement: DEDENT conditional statement • DEDENT DEDENT
+
+    DEDENT  shift, and go to state 58
+
+
+State 38
+
+   35 conditionalExpr: conditionalExpr EQ • conditionalExpr
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 59
+
+
+State 39
+
+   34 conditionalExpr: conditionalExpr NEQ • conditionalExpr
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 60
+
+
+State 40
+
+   31 conditionalExpr: conditionalExpr GT • conditionalExpr
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 61
+
+
+State 41
+
+   33 conditionalExpr: conditionalExpr GTE • conditionalExpr
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 62
+
+
+State 42
+
+   30 conditionalExpr: conditionalExpr LT • conditionalExpr
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 63
+
+
+State 43
+
+   32 conditionalExpr: conditionalExpr LTE • conditionalExpr
+
+    IDENTIFIER  shift, and go to state 17
+    INTEGER     shift, and go to state 18
+    BOOLEAN     shift, and go to state 19
+    FLOAT       shift, and go to state 20
+
+    conditionalExpr  go to state 64
+
+
+State 44
+
+   38 ifelse: IF conditionalExpr COLON • NEWLINE
+
+    NEWLINE  shift, and go to state 65
+
+
+State 45
+
+   39 ifelse: ELSE COLON NEWLINE •
+
+    $default  reduce using rule 39 (ifelse)
+
+
+State 46
+
+   37 conditional: WHILE conditionalExpr COLON • NEWLINE
+
+    NEWLINE  shift, and go to state 66
+
+
+State 47
+
+   16 expression: LPAREN expression • RPAREN
+   17           | expression • PLUS expression
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+
+    PLUS       shift, and go to state 51
+    MINUS      shift, and go to state 52
+    TIMES      shift, and go to state 53
+    DIVIDEDBY  shift, and go to state 54
+    RPAREN     shift, and go to state 67
+
+
+State 48
+
+   22 list: LBRACK RBRACK •
+
+    $default  reduce using rule 22 (list)
+
+
+State 49
+
+   17 expression: expression • PLUS expression
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+   24 elements: expression •
+
+    PLUS       shift, and go to state 51
+    MINUS      shift, and go to state 52
+    TIMES      shift, and go to state 53
+    DIVIDEDBY  shift, and go to state 54
+
+    $default  reduce using rule 24 (elements)
+
+
+State 50
+
+   23 list: LBRACK elements • RBRACK
+   25 elements: elements • COMMA expression
+
+    COMMA   shift, and go to state 68
+    RBRACK  shift, and go to state 69
+
+
+State 51
+
+   17 expression: expression PLUS • expression
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 70
+    list        go to state 34
+
+
+State 52
+
+   18 expression: expression MINUS • expression
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 71
+    list        go to state 34
+
+
+State 53
+
+   19 expression: expression TIMES • expression
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 72
+    list        go to state 34
+
+
+State 54
+
+   20 expression: expression DIVIDEDBY • expression
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 73
+    list        go to state 34
+
+
+State 55
+
+   10 statement: IDENTIFIER EQUALS expression NEWLINE •
+
+    $default  reduce using rule 10 (statement)
+
+
+State 56
+
+    8 statement: INDENT statement INDENT statement •
+
+    $default  reduce using rule 8 (statement)
+
+
+State 57
+
+    9 statement: INDENT flowcontrol NEWLINE DEDENT • DEDENT
+
+    DEDENT  shift, and go to state 74
+
+
+State 58
+
+    5 statement: DEDENT conditional statement DEDENT • DEDENT
+
+    DEDENT  shift, and go to state 75
+
+
+State 59
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+   35                | conditionalExpr EQ conditionalExpr •
+
+    EQ   shift, and go to state 38
+    NEQ  shift, and go to state 39
+    GT   shift, and go to state 40
+    GTE  shift, and go to state 41
+    LT   shift, and go to state 42
+    LTE  shift, and go to state 43
+
+    EQ        [reduce using rule 35 (conditionalExpr)]
+    NEQ       [reduce using rule 35 (conditionalExpr)]
+    GT        [reduce using rule 35 (conditionalExpr)]
+    GTE       [reduce using rule 35 (conditionalExpr)]
+    LT        [reduce using rule 35 (conditionalExpr)]
+    LTE       [reduce using rule 35 (conditionalExpr)]
+    $default  reduce using rule 35 (conditionalExpr)
+
+
+State 60
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   34                | conditionalExpr NEQ conditionalExpr •
+   35                | conditionalExpr • EQ conditionalExpr
+
+    EQ   shift, and go to state 38
+    NEQ  shift, and go to state 39
+    GT   shift, and go to state 40
+    GTE  shift, and go to state 41
+    LT   shift, and go to state 42
+    LTE  shift, and go to state 43
+
+    EQ        [reduce using rule 34 (conditionalExpr)]
+    NEQ       [reduce using rule 34 (conditionalExpr)]
+    GT        [reduce using rule 34 (conditionalExpr)]
+    GTE       [reduce using rule 34 (conditionalExpr)]
+    LT        [reduce using rule 34 (conditionalExpr)]
+    LTE       [reduce using rule 34 (conditionalExpr)]
+    $default  reduce using rule 34 (conditionalExpr)
+
+
+State 61
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   31                | conditionalExpr GT conditionalExpr •
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+
+    EQ   shift, and go to state 38
+    NEQ  shift, and go to state 39
+    GT   shift, and go to state 40
+    GTE  shift, and go to state 41
+    LT   shift, and go to state 42
+    LTE  shift, and go to state 43
+
+    EQ        [reduce using rule 31 (conditionalExpr)]
+    NEQ       [reduce using rule 31 (conditionalExpr)]
+    GT        [reduce using rule 31 (conditionalExpr)]
+    GTE       [reduce using rule 31 (conditionalExpr)]
+    LT        [reduce using rule 31 (conditionalExpr)]
+    LTE       [reduce using rule 31 (conditionalExpr)]
+    $default  reduce using rule 31 (conditionalExpr)
+
+
+State 62
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   33                | conditionalExpr GTE conditionalExpr •
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+
+    EQ   shift, and go to state 38
+    NEQ  shift, and go to state 39
+    GT   shift, and go to state 40
+    GTE  shift, and go to state 41
+    LT   shift, and go to state 42
+    LTE  shift, and go to state 43
+
+    EQ        [reduce using rule 33 (conditionalExpr)]
+    NEQ       [reduce using rule 33 (conditionalExpr)]
+    GT        [reduce using rule 33 (conditionalExpr)]
+    GTE       [reduce using rule 33 (conditionalExpr)]
+    LT        [reduce using rule 33 (conditionalExpr)]
+    LTE       [reduce using rule 33 (conditionalExpr)]
+    $default  reduce using rule 33 (conditionalExpr)
+
+
+State 63
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   30                | conditionalExpr LT conditionalExpr •
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+
+    EQ   shift, and go to state 38
+    NEQ  shift, and go to state 39
+    GT   shift, and go to state 40
+    GTE  shift, and go to state 41
+    LT   shift, and go to state 42
+    LTE  shift, and go to state 43
+
+    EQ        [reduce using rule 30 (conditionalExpr)]
+    NEQ       [reduce using rule 30 (conditionalExpr)]
+    GT        [reduce using rule 30 (conditionalExpr)]
+    GTE       [reduce using rule 30 (conditionalExpr)]
+    LT        [reduce using rule 30 (conditionalExpr)]
+    LTE       [reduce using rule 30 (conditionalExpr)]
+    $default  reduce using rule 30 (conditionalExpr)
+
+
+State 64
+
+   30 conditionalExpr: conditionalExpr • LT conditionalExpr
+   31                | conditionalExpr • GT conditionalExpr
+   32                | conditionalExpr • LTE conditionalExpr
+   32                | conditionalExpr LTE conditionalExpr •
+   33                | conditionalExpr • GTE conditionalExpr
+   34                | conditionalExpr • NEQ conditionalExpr
+   35                | conditionalExpr • EQ conditionalExpr
+
+    EQ   shift, and go to state 38
+    NEQ  shift, and go to state 39
+    GT   shift, and go to state 40
+    GTE  shift, and go to state 41
+    LT   shift, and go to state 42
+    LTE  shift, and go to state 43
+
+    EQ        [reduce using rule 32 (conditionalExpr)]
+    NEQ       [reduce using rule 32 (conditionalExpr)]
+    GT        [reduce using rule 32 (conditionalExpr)]
+    GTE       [reduce using rule 32 (conditionalExpr)]
+    LT        [reduce using rule 32 (conditionalExpr)]
+    LTE       [reduce using rule 32 (conditionalExpr)]
+    $default  reduce using rule 32 (conditionalExpr)
+
+
+State 65
+
+   38 ifelse: IF conditionalExpr COLON NEWLINE •
+
+    $default  reduce using rule 38 (ifelse)
+
+
+State 66
+
+   37 conditional: WHILE conditionalExpr COLON NEWLINE •
+
+    $default  reduce using rule 37 (conditional)
+
+
+State 67
+
+   16 expression: LPAREN expression RPAREN •
+
+    $default  reduce using rule 16 (expression)
+
+
+State 68
+
+   25 elements: elements COMMA • expression
+
+    IDENTIFIER  shift, and go to state 26
+    INTEGER     shift, and go to state 27
+    BOOLEAN     shift, and go to state 28
+    FLOAT       shift, and go to state 29
+    STRING      shift, and go to state 30
+    LPAREN      shift, and go to state 31
+    LBRACK      shift, and go to state 32
+
+    expression  go to state 76
+    list        go to state 34
+
+
+State 69
+
+   23 list: LBRACK elements RBRACK •
+
+    $default  reduce using rule 23 (list)
+
+
+State 70
+
+   17 expression: expression • PLUS expression
+   17           | expression PLUS expression •
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+
+    TIMES      shift, and go to state 53
+    DIVIDEDBY  shift, and go to state 54
+
+    $default  reduce using rule 17 (expression)
+
+
+State 71
+
+   17 expression: expression • PLUS expression
+   18           | expression • MINUS expression
+   18           | expression MINUS expression •
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+
+    TIMES      shift, and go to state 53
+    DIVIDEDBY  shift, and go to state 54
+
+    $default  reduce using rule 18 (expression)
+
+
+State 72
+
+   17 expression: expression • PLUS expression
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   19           | expression TIMES expression •
+   20           | expression • DIVIDEDBY expression
+
+    $default  reduce using rule 19 (expression)
+
+
+State 73
+
+   17 expression: expression • PLUS expression
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+   20           | expression DIVIDEDBY expression •
+
+    $default  reduce using rule 20 (expression)
+
+
+State 74
+
+    9 statement: INDENT flowcontrol NEWLINE DEDENT DEDENT •
+
+    $default  reduce using rule 9 (statement)
+
+
+State 75
+
+    5 statement: DEDENT conditional statement DEDENT DEDENT •
+
+    $default  reduce using rule 5 (statement)
+
+
+State 76
+
+   17 expression: expression • PLUS expression
+   18           | expression • MINUS expression
+   19           | expression • TIMES expression
+   20           | expression • DIVIDEDBY expression
+   25 elements: elements COMMA expression •
+
+    PLUS       shift, and go to state 51
+    MINUS      shift, and go to state 52
+    TIMES      shift, and go to state 53
+    DIVIDEDBY  shift, and go to state 54
+
+    $default  reduce using rule 25 (elements)
