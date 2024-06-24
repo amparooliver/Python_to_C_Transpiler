@@ -7,17 +7,17 @@ Para compilar y probar la versión 2 del transpilador, sigue estos pasos desde l
 
 1. Generación del Analizador Léxico y Sintáctico:
 ```
-bison -d -o parser-push.cpp parser.y
-flex -o scanner-push.cpp scanner.l
+bison -d -o parser.cpp parser.y
+flex -o scanner.cpp scanner.l
 ```
 2. Compilación del Código:
 ```
-g++ main.c parser-push.cpp scanner-push.cpp -o parser-push
+g++ main.c parser.cpp scanner.cpp -o parser
 
 ```
 3. Testing:
 ```
-./parser-push < test_files/test1.py
+./parser< test_files/test1.py
 ```
 ### Resultado
 El resultado de la traducción se creará en un archivo llamado `output.c`.
