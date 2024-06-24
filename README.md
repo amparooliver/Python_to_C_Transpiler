@@ -12,7 +12,7 @@ flex -o scanner.cpp scanner.l
 ```
 2. Compilación del Código:
 ```
-g++ main.c parser.cpp scanner.cpp -o parser
+g++ main.cpp parser.cpp scanner.cpp -o parser
 
 ```
 3. Testing:
