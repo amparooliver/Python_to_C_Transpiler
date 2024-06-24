@@ -64,43 +64,63 @@ extern int yydebug;
     WHITESPACE = 265,              /* WHITESPACE  */
     IF = 266,                      /* IF  */
     COLON = 267,                   /* COLON  */
-    LT = 268,                      /* LT  */
-    ELSE = 269,                    /* ELSE  */
-    INDENT = 270,                  /* INDENT  */
-    DEDENT = 271,                  /* DEDENT  */
-    FALSE = 272,                   /* FALSE  */
+    ELSE = 268,                    /* ELSE  */
+    INDENT = 269,                  /* INDENT  */
+    DEDENT = 270,                  /* DEDENT  */
+    FALSE = 271,                   /* FALSE  */
+    TRUE = 272,                    /* TRUE  */
     NONE = 273,                    /* NONE  */
-    TRUE = 274,                    /* TRUE  */
-    AND = 275,                     /* AND  */
-    AS = 276,                      /* AS  */
-    ASSERT = 277,                  /* ASSERT  */
-    ASYNC = 278,                   /* ASYNC  */
-    WAIT = 279,                    /* WAIT  */
-    BREAK = 280,                   /* BREAK  */
-    CLASS = 281,                   /* CLASS  */
-    CONTINUE = 282,                /* CONTINUE  */
-    DEF = 283,                     /* DEF  */
-    DEL = 284,                     /* DEL  */
-    ELIF = 285,                    /* ELIF  */
-    EXCEPT = 286,                  /* EXCEPT  */
-    FINALLY = 287,                 /* FINALLY  */
-    FOR = 288,                     /* FOR  */
-    FROM = 289,                    /* FROM  */
-    GLOBAL = 290,                  /* GLOBAL  */
-    IMPORT = 291,                  /* IMPORT  */
-    IN = 292,                      /* IN  */
-    IS = 293,                      /* IS  */
-    LAMBDA = 294,                  /* LAMBDA  */
-    NONLOCAL = 295,                /* NONLOCAL  */
-    NOT = 296,                     /* NOT  */
-    OR = 297,                      /* OR  */
-    PASS = 298,                    /* PASS  */
-    RAISE = 299,                   /* RAISE  */
-    RETURN = 300,                  /* RETURN  */
-    TRY = 301,                     /* TRY  */
-    WHILE = 302,                   /* WHILE  */
-    WITH = 303,                    /* WITH  */
-    YIELD = 304                    /* YIELD  */
+    AND = 274,                     /* AND  */
+    AS = 275,                      /* AS  */
+    ASSERT = 276,                  /* ASSERT  */
+    ASYNC = 277,                   /* ASYNC  */
+    WAIT = 278,                    /* WAIT  */
+    BREAK = 279,                   /* BREAK  */
+    CLASS = 280,                   /* CLASS  */
+    CONTINUE = 281,                /* CONTINUE  */
+    DEF = 282,                     /* DEF  */
+    DEL = 283,                     /* DEL  */
+    ELIF = 284,                    /* ELIF  */
+    EXCEPT = 285,                  /* EXCEPT  */
+    FINALLY = 286,                 /* FINALLY  */
+    FOR = 287,                     /* FOR  */
+    FROM = 288,                    /* FROM  */
+    GLOBAL = 289,                  /* GLOBAL  */
+    IMPORT = 290,                  /* IMPORT  */
+    IN = 291,                      /* IN  */
+    IS = 292,                      /* IS  */
+    LAMBDA = 293,                  /* LAMBDA  */
+    NONLOCAL = 294,                /* NONLOCAL  */
+    NOT = 295,                     /* NOT  */
+    OR = 296,                      /* OR  */
+    PASS = 297,                    /* PASS  */
+    RAISE = 298,                   /* RAISE  */
+    RETURN = 299,                  /* RETURN  */
+    TRY = 300,                     /* TRY  */
+    WHILE = 301,                   /* WHILE  */
+    WITH = 302,                    /* WITH  */
+    YIELD = 303,                   /* YIELD  */
+    PLUS = 304,                    /* PLUS  */
+    MINUS = 305,                   /* MINUS  */
+    MULTIPLY = 306,                /* MULTIPLY  */
+    POWER = 307,                   /* POWER  */
+    DIVIDE = 308,                  /* DIVIDE  */
+    FLOORDIV = 309,                /* FLOORDIV  */
+    MOD = 310,                     /* MOD  */
+    MATMUL = 311,                  /* MATMUL  */
+    LSHIFT = 312,                  /* LSHIFT  */
+    RSHIFT = 313,                  /* RSHIFT  */
+    BITAND = 314,                  /* BITAND  */
+    BITOR = 315,                   /* BITOR  */
+    BITXOR = 316,                  /* BITXOR  */
+    BITNOT = 317,                  /* BITNOT  */
+    WALRUS = 318,                  /* WALRUS  */
+    LT = 319,                      /* LT  */
+    GT = 320,                      /* GT  */
+    LE = 321,                      /* LE  */
+    GE = 322,                      /* GE  */
+    DEQ = 323,                     /* DEQ  */
+    NEQ = 324                      /* NEQ  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -109,7 +129,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "parser.y"
+#line 28 "parser.y"
 
     int int_val;
     float float_val;
@@ -117,7 +137,7 @@ union YYSTYPE
     int indent;
     int dedent;
 
-#line 121 "parser.tab.h"
+#line 141 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

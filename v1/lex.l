@@ -13,11 +13,17 @@ as         def        from       nonlocal   while
 assert     del        global     not        with
 async      elif       if         or         yield
 
+Python Operators:
++       -       *       **      /       //      %      @
+<<      >>      &       |       ^       ~       :=
+<       >       <=      >=      ==      !=
+
 */
 
 #include "parser.tab.h"
 int indentation_level = 0;
 int bandera = 0;
+int line_counter = 0;
 
 
 
@@ -86,10 +92,32 @@ int bandera = 0;
 "with"      { return WITH; }
 "yield"     { return YIELD; }
 
+"+"         { return PLUS; }
+"-"         { return MINUS; }
+"*"         { return MULTIPLY; }
+"**"        { return POWER; }
+"/"         { return DIVIDE; }
+"//"        { return FLOORDIV; }
+"%"         { return MOD; }
+"@"         { return MATMUL; }
+"<<"        { return LSHIFT; }
+">>"        { return RSHIFT; }
+"&"         { return BITAND; }
+"|"         { return BITOR; }
+"^"         { return BITXOR; }
+"~"         { return BITNOT; }
+":="        { return WALRUS; }
+"<"         { return LT; }
+">"         { return GT; }
+"<="        { return LE; }
+">="        { return GE; }
+"=="        { return DEQ; }
+"!="        { return NEQ; }
+
 
 "="                     { return EQ; }
 ":"                     { fprintf(stderr, "retorna COLON \n "); return COLON;}
-"<"                     { return LT; }  
+
 [a-zA-Z_][a-zA-Z0-9_]*  { yylval.str = strdup(yytext); return ID; }
 [0-9]+                  { yylval.int_val = atoi(yytext); return INT; }
 [0-9]+(\.[0-9]+)?       { yylval.float_val = atof(yytext); return FLOAT; }

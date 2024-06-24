@@ -21,6 +21,7 @@ void add_symbol(char *name, char *type);
 FILE *output_file; // File pointer for output
 
 extern int bandera;
+extern int line_counter;
 
 %}
 
@@ -36,15 +37,20 @@ extern int bandera;
 %token <int_val> INT
 %token <float_val> FLOAT
 %token EQ NEWLINE WHITESPACE 
-%token IF COLON LT ELSE
+%token IF COLON ELSE
 %token <indent> INDENT 
 %token <dedent> DEDENT
+%token <str> FALSE TRUE
 
-%token FALSE NONE TRUE AND AS ASSERT ASYNC WAIT BREAK CLASS CONTINUE DEF DEL
+%token NONE AND AS ASSERT ASYNC WAIT BREAK CLASS CONTINUE DEF DEL
 %token ELIF EXCEPT FINALLY FOR FROM GLOBAL IMPORT IN IS LAMBDA NONLOCAL NOT
 %token OR PASS RAISE RETURN TRY WHILE WITH YIELD
 
-%type <str> statement assignment conditional expression factor statements
+%token PLUS MINUS MULTIPLY POWER DIVIDE FLOORDIV MOD MATMUL
+%token LSHIFT RSHIFT BITAND BITOR BITXOR BITNOT WALRUS
+%token LT GT LE GE DEQ NEQ
+
+%type <str> statement assignment conditional expression factor statements keywords words
 
 %start program
 
@@ -117,6 +123,10 @@ assignment:
             fprintf(output_file, "%s = %s;\n", $1, $3);
         }
     }
+    |
+    keywords EQ {
+        fprintf(stderr, "Error: cannot assign to keyword '%s' (Line: %d) \n", $1, line_counter);
+    }
     ;
 
 conditional: 
@@ -164,7 +174,21 @@ factor:
         }
     }
     ;
-
+keywords:
+    words;
+words:
+    FALSE {
+        char buffer[64];
+        sprintf(buffer, "%s", $1);
+        $$ = strdup(buffer);
+    }
+    |
+    TRUE {
+        char buffer[64];
+        sprintf(buffer, "%s", $1);
+        $$ = strdup(buffer);
+    }
+    ;
 %%
 
 void yyerror(const char *s) {
