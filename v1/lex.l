@@ -114,6 +114,10 @@ int line_counter = 0;
 "=="        { return DEQ; }
 "!="        { return NEQ; }
 
+"["         { return LBRACK; }
+"]"         { return RBRACK; }
+","         { return COMMA; }
+
 
 "="                     { return EQ; }
 ":"                     { fprintf(stderr, "retorna COLON \n "); return COLON;}

@@ -50,7 +50,9 @@ extern int line_counter;
 %token LSHIFT RSHIFT BITAND BITOR BITXOR BITNOT WALRUS
 %token LT GT LE GE DEQ NEQ
 
-%type <str> statement assignment conditional expression factor statements keywords words
+%token LBRACK RBRACK COMMA // Probando listas
+
+%type <str> statement assignment conditional expression factor statements operation list_assignment list//keywords words
 
 %start program
 
@@ -70,6 +72,10 @@ statement:
     assignment
     |
     conditional
+    |
+    operation
+    |
+    list_assignment
     ;
 assignment:
     ID EQ INT { // ASIGNACIONES Y DECLARACIONES INT
@@ -123,12 +129,32 @@ assignment:
             fprintf(output_file, "%s = %s;\n", $1, $3);
         }
     }
-    |
-    keywords EQ {
-        fprintf(stderr, "Error: cannot assign to keyword '%s' (Line: %d) \n", $1, line_counter);
+    ;
+list_assignment:
+    ID EQ LBRACK list RBRACK {
+        fprintf(stderr, "ID EQ list --> %s = [%s] \n", $1, $4);
+        symbol *sym = find_symbol($1);
+        if (sym == NULL) {
+            add_symbol($1, "list");
+            fprintf(output_file, "char* %s[] = {%s};\n", $1, $4);  // Declaración de lista
+        } else {
+            fprintf(output_file, "%s = {%s};\n", $1, $4);
+        }
     }
     ;
-
+list: 
+    list COMMA factor {
+        char buffer[256];
+        sprintf(buffer, "%s, %s", $1, $3);
+        $$ = strdup(buffer);
+        free($1);
+        free($3);
+    }
+    |
+    factor {
+        $$ = $1;
+    }
+    ;
 conditional: 
     /* IF expression LT expression COLON NEWLINE INDENT statements DEDENT{
         fprintf(stderr, "entra a exp < exp : \n ");
@@ -148,6 +174,16 @@ conditional:
         }
     }
     ;
+operation:
+    ID EQ expression PLUS expression{
+        // No implementado
+    }
+    |
+    ID EQ expression MINUS expression{
+        // No implementado
+    }
+    ;
+
 expression: 
     factor
     ;
@@ -173,7 +209,19 @@ factor:
             $$ = $1;
         }
     }
+    |
+    STRING {
+        $$ = $1;
+    }
+    |
+    CHAR {
+        char buffer[64];
+        sprintf(buffer, "'%c'", $1[0]);
+        $$ = strdup(buffer);
+    }
     ;
+    ;
+/* 
 keywords:
     words;
 words:
@@ -189,6 +237,7 @@ words:
         $$ = strdup(buffer);
     }
     ;
+*/
 %%
 
 void yyerror(const char *s) {

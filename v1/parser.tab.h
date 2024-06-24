@@ -120,7 +120,10 @@ extern int yydebug;
     LE = 321,                      /* LE  */
     GE = 322,                      /* GE  */
     DEQ = 323,                     /* DEQ  */
-    NEQ = 324                      /* NEQ  */
+    NEQ = 324,                     /* NEQ  */
+    LBRACK = 325,                  /* LBRACK  */
+    RBRACK = 326,                  /* RBRACK  */
+    COMMA = 327                    /* COMMA  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -137,7 +140,7 @@ union YYSTYPE
     int indent;
     int dedent;
 
-#line 141 "parser.tab.h"
+#line 144 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
