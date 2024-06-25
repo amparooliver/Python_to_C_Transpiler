@@ -60,40 +60,42 @@ extern int yydebug;
     FBOOLEAN = 261,                /* FBOOLEAN  */
     FLOAT = 262,                   /* FLOAT  */
     STRING = 263,                  /* STRING  */
-    EQUALS = 264,                  /* EQUALS  */
-    PLUS = 265,                    /* PLUS  */
-    MINUS = 266,                   /* MINUS  */
-    TIMES = 267,                   /* TIMES  */
-    DIVIDEDBY = 268,               /* DIVIDEDBY  */
-    EQ = 269,                      /* EQ  */
-    NEQ = 270,                     /* NEQ  */
-    GT = 271,                      /* GT  */
-    GTE = 272,                     /* GTE  */
-    LT = 273,                      /* LT  */
-    LTE = 274,                     /* LTE  */
-    RETURN = 275,                  /* RETURN  */
-    INDENT = 276,                  /* INDENT  */
-    DEDENT = 277,                  /* DEDENT  */
-    NEWLINE = 278,                 /* NEWLINE  */
-    IF = 279,                      /* IF  */
-    COLON = 280,                   /* COLON  */
-    AND = 281,                     /* AND  */
-    BREAK = 282,                   /* BREAK  */
-    DEF = 283,                     /* DEF  */
-    ELIF = 284,                    /* ELIF  */
-    ELSE = 285,                    /* ELSE  */
-    FOR = 286,                     /* FOR  */
-    IN = 287,                      /* IN  */
-    RANGE = 288,                   /* RANGE  */
-    NOT = 289,                     /* NOT  */
-    OR = 290,                      /* OR  */
-    WHILE = 291,                   /* WHILE  */
-    SEMICOLON = 292,               /* SEMICOLON  */
-    LPAREN = 293,                  /* LPAREN  */
-    RPAREN = 294,                  /* RPAREN  */
-    COMMA = 295,                   /* COMMA  */
-    LBRACK = 296,                  /* LBRACK  */
-    RBRACK = 297                   /* RBRACK  */
+    DOUBLE = 264,                  /* DOUBLE  */
+    CONSTANT = 265,                /* CONSTANT  */
+    EQUALS = 266,                  /* EQUALS  */
+    PLUS = 267,                    /* PLUS  */
+    MINUS = 268,                   /* MINUS  */
+    TIMES = 269,                   /* TIMES  */
+    DIVIDEDBY = 270,               /* DIVIDEDBY  */
+    EQ = 271,                      /* EQ  */
+    NEQ = 272,                     /* NEQ  */
+    GT = 273,                      /* GT  */
+    GTE = 274,                     /* GTE  */
+    LT = 275,                      /* LT  */
+    LTE = 276,                     /* LTE  */
+    RETURN = 277,                  /* RETURN  */
+    INDENT = 278,                  /* INDENT  */
+    DEDENT = 279,                  /* DEDENT  */
+    NEWLINE = 280,                 /* NEWLINE  */
+    IF = 281,                      /* IF  */
+    COLON = 282,                   /* COLON  */
+    AND = 283,                     /* AND  */
+    BREAK = 284,                   /* BREAK  */
+    ELIF = 285,                    /* ELIF  */
+    ELSE = 286,                    /* ELSE  */
+    FOR = 287,                     /* FOR  */
+    IN = 288,                      /* IN  */
+    RANGE = 289,                   /* RANGE  */
+    NOT = 290,                     /* NOT  */
+    OR = 291,                      /* OR  */
+    WHILE = 292,                   /* WHILE  */
+    DEF = 293,                     /* DEF  */
+    SEMICOLON = 294,               /* SEMICOLON  */
+    LPAREN = 295,                  /* LPAREN  */
+    RPAREN = 296,                  /* RPAREN  */
+    COMMA = 297,                   /* COMMA  */
+    LBRACK = 298,                  /* LBRACK  */
+    RBRACK = 299                   /* RBRACK  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -102,13 +104,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "parser.y"
+#line 24 "parser.y"
 
   float value;
   std::string* str;
   int token;
 
-#line 112 "parser.hpp"
+#line 114 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

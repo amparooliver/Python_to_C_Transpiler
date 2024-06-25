@@ -132,97 +132,43 @@ std::stack<int> _indent_stack;
 "for"       { PUSH_TOKEN((yylval.token = FOR));}
 "in"        { PUSH_TOKEN((yylval.token = IN));}
 "range"     { PUSH_TOKEN((yylval.token = RANGE));}
+"def"       { PUSH_TOKEN((yylval.token = DEF));}
 
-[a-zA-Z_][a-zA-Z0-9_]*  {
-                yylval.str = new std::string(yytext, yyleng);
-                PUSH_TOKEN(IDENTIFIER);
-                //std::cout << "IDENTIFIER\t\t" << yytext << std::endl; 
-              }
+[A-Z][A-Z0-9_]*           {yylval.str = new std::string(yytext, yyleng);
+                          PUSH_TOKEN(CONSTANT);}
 
--?[0-9]*"."[0-9]+   {
-                     yylval.str = new std::string(yytext, yyleng);
-                     PUSH_TOKEN(FLOAT);
-                   }
+[a-zA-Z_][a-zA-Z0-9_]*  {yylval.str = new std::string(yytext, yyleng);
+                        PUSH_TOKEN(IDENTIFIER);}
 
--?[0-9]+    {
-                     yylval.str = new std::string(yytext, yyleng);
-                     PUSH_TOKEN(INTEGER);
-                   }
+-?[0-9]*\.[0-9]{1,7}   {yylval.str = new std::string(yytext, yyleng);
+                        PUSH_TOKEN(FLOAT);}
 
-(\"[^\"]+\")  {
-                     yylval.str = new std::string(yytext, yyleng);
-                     PUSH_TOKEN(STRING);
-                   }
+-?[0-9]*"."[0-9]+       {yylval.str = new std::string(yytext, yyleng);
+                        PUSH_TOKEN(DOUBLE);}
 
-"="         { PUSH_TOKEN((yylval.token = EQUALS));
-            //std::cout << "ASSIGN\t\t" << yytext << std::endl;
-              } 
+-?[0-9]+                {yylval.str = new std::string(yytext, yyleng);
+                        PUSH_TOKEN(INTEGER);}
 
-"+"         { PUSH_TOKEN((yylval.token = PLUS)); 
-            //std::cout << "PLUS\t\t" << yytext << std::endl;
-            }
+(\"[^\"]+\")            {yylval.str = new std::string(yytext, yyleng);
+                        PUSH_TOKEN(STRING);}
 
-"-"         {  PUSH_TOKEN((yylval.token = MINUS));
-            //std::cout << "MINUS\t\t" << yytext << std::endl; 
-            }
-
-"*"         {  PUSH_TOKEN((yylval.token = TIMES));
-            //std::cout << "TIMES\t\t" << yytext << std::endl;
-             }
-
-"/"         {  PUSH_TOKEN((yylval.token = DIVIDEDBY));
-            //std::cout << "DIVIDEDBY\t" << yytext << std::endl;
-             }
-
-"=="        { PUSH_TOKEN((yylval.token = EQ));
-            //std::cout << "EQ\t\t" << yytext << std::endl;
-             }
-
-"!="        { PUSH_TOKEN((yylval.token = NEQ));
-            //std::cout << "NEQ\t\t" << yytext << std::endl;
-             }
-
-">"         { 
-            PUSH_TOKEN((yylval.token = GT));
-            //std::cout << "GT\t\t" << yytext << std::endl;
-             }
-
-">="        { PUSH_TOKEN((yylval.token = GTE));
-            //std::cout << "GTE\t\t" << yytext << std::endl;
-             }
-
-"<"         { PUSH_TOKEN((yylval.token = LT));
-            //std::cout << "LT\t\t" << yytext << std::endl;
-             }
-
-"<="        { PUSH_TOKEN((yylval.token = LTE));
-            //std::cout << "LTE\t\t" << yytext << std::endl;
-             }
-
-"("         { PUSH_TOKEN((yylval.token = LPAREN));
-            //std::cout << "LPAREN\t\t" << yytext << std::endl;
-             }
-
-")"         { PUSH_TOKEN((yylval.token = RPAREN));
-            //std::cout << "RPAREN\t\t" << yytext << std::endl;
-             }
-
-","         {  PUSH_TOKEN((yylval.token = COMMA));
-            //std::cout << "COMMA\t\t" << yytext << std::endl; 
-            }
-
-":"         { 
-              PUSH_TOKEN((yylval.token = COLON));
-              //std::cout << "COLON\t\t" << yytext << std::endl;
-               }
-"["         { 
-              PUSH_TOKEN((yylval.token = LBRACK));
-              //std::cout << "LBRACK\t\t" << yytext << std::endl;
-               }
-"]"         { 
-              PUSH_TOKEN((yylval.token = RBRACK));
-              //std::cout << "RBRACK\t\t" << yytext << std::endl;
-               }
+"="         { PUSH_TOKEN((yylval.token = EQUALS));} 
+"+"         { PUSH_TOKEN((yylval.token = PLUS));}
+"-"         {  PUSH_TOKEN((yylval.token = MINUS)); }
+"*"         {  PUSH_TOKEN((yylval.token = TIMES));}
+"/"         {  PUSH_TOKEN((yylval.token = DIVIDEDBY));}
+"=="        { PUSH_TOKEN((yylval.token = EQ));}
+"!="        { PUSH_TOKEN((yylval.token = NEQ));}
+">"         { PUSH_TOKEN((yylval.token = GT));}
+">="        { PUSH_TOKEN((yylval.token = GTE));}
+"<"         { PUSH_TOKEN((yylval.token = LT));}
+"<="        { PUSH_TOKEN((yylval.token = LTE));}
+"("         { PUSH_TOKEN((yylval.token = LPAREN));}
+")"         { PUSH_TOKEN((yylval.token = RPAREN));}
+","         {  PUSH_TOKEN((yylval.token = COMMA));}
+":"         { PUSH_TOKEN((yylval.token = COLON));}
+"["         { PUSH_TOKEN((yylval.token = LBRACK));}
+"]"         { PUSH_TOKEN((yylval.token = RBRACK));}
 
 .           {
               std::cerr << "Simbolo no reconocido en la linea " << yylineno << " --> "

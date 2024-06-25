@@ -2,15 +2,14 @@
 
 int main() {
 
-int a = 1;
-int b = 2;
-for (int x = 0; x <  5; x++) {
-b = b * 2;
-if(a == 1) {
-a = a + x;
-} else {
-a = a - 1;
-}
-}
+int numero = 45;
+int var1 = 1;
+float var_float = 1.5;
+double pi_double = 3.14159265359;
+char varConTexto[] = "Hola!";
+bool BoolVar = true;
+int var_lista[] = [1, 2, 3, 4, 5];
+char lista_con_letras[] = ["h", "c", "e"];
+const int CONSTANTE = 1234;
 
 }

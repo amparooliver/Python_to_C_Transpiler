@@ -8,3 +8,4 @@ for x in range(5):
         a = a + x  # Incrementa a por el valor de x
     else:
         a = a - 1  # Decrementa a por 1
+

@@ -5,6 +5,7 @@
 extern int yylex();
 extern std::map<std::string, std::string> symbol_table; // Accede a la tabla de símbolos desde parser.hpp
 extern std::string* goalStr;
+//extern std::string funcProcStr[2];
 
 int main(int argc, char const *argv[]) {
     std::ofstream output_file("output.c");
@@ -20,6 +21,12 @@ int main(int argc, char const *argv[]) {
     if (!yylex()) {
         // Encabezado y función principal
         std::cout << "#include <iostream>\n\n";
+
+        // Imprimir funciones y procedimientos
+        /*if (!funcProcStr->empty()) {
+            std::cout << *funcProcStr << "\n";
+        }*/
+      
         std::cout << "int main() {\n\n";
 
         // Imprimir el código generado por Bison (goalStr)
