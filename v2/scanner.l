@@ -114,61 +114,24 @@ std::stack<int> _indent_stack;
 
 [ \t]       { /* Ignoramos espacios blancos que no sean los de arriba */ }
 
-"and"       {  PUSH_TOKEN((yylval.token = AND));
-            //std::cout << "AND\t\t" << yytext << std::endl; 
-            }
-
-"break"     { PUSH_TOKEN((yylval.token = BREAK));
-              //std::cout << "BREAK\t\t" << yytext << std::endl;
-               }
-
-"def"       { PUSH_TOKEN((yylval.token = DEF));
-              //std::cout << "DEF\t\t" << yytext << std::endl;
-               }
-
-"elif"      { PUSH_TOKEN((yylval.token = ELIF));
-              //std::cout << "ELIF\t\t" << yytext << std::endl;
-               }
-
-"else"      { PUSH_TOKEN((yylval.token = ELSE));
-              //std::cout << "ELSE\t\t" << yytext << std::endl;
-               }
-
-"for"       { PUSH_TOKEN((yylval.token = FOR));
-              //std::cout << "FOR\t\t" << yytext << std::endl;
-               }
-
-"if"        { PUSH_TOKEN((yylval.token = IF));
-              //std::cout << "IF\t\t" << yytext << std::endl;
-               }
-
-"not"       { PUSH_TOKEN((yylval.token = NOT));
-              //std::cout << "NOT\t\t" << yytext << std::endl;
-               }
-
-"or"        { PUSH_TOKEN((yylval.token = OR));
-              //std::cout << "OR\t\t" << yytext << std::endl;
-               }
-
-"return"    { PUSH_TOKEN((yylval.token = RETURN));
-              //std::cout << "RETURN\t\t" << yytext << std::endl;
-               }
-
-"while"     { PUSH_TOKEN((yylval.token = WHILE));
-              //std::cout << "WHILE\t\t" << yytext << std::endl;
-               }
-
-"True"      { 
-             yylval.str = new std::string("true", yyleng);
-              PUSH_TOKEN(TBOOLEAN);
-              //std::cout << "TBOOLEAN\t\t" << true << std::endl;
-               }
-
-"False"     { 
-              yylval.str = new std::string("false", yyleng);
-              PUSH_TOKEN(FBOOLEAN);
-              //std::cout << "FBOOLEAN\t\t" << false << std::endl;
-               }
+"and"       { PUSH_TOKEN((yylval.token = AND));}
+"break"     { PUSH_TOKEN((yylval.token = BREAK));}
+"def"       { PUSH_TOKEN((yylval.token = DEF));}
+"elif"      { PUSH_TOKEN((yylval.token = ELIF));}
+"else"      { PUSH_TOKEN((yylval.token = ELSE));}
+"for"       { PUSH_TOKEN((yylval.token = FOR));}
+"if"        { PUSH_TOKEN((yylval.token = IF));}
+"not"       { PUSH_TOKEN((yylval.token = NOT));}
+"or"        { PUSH_TOKEN((yylval.token = OR));}
+"return"    { PUSH_TOKEN((yylval.token = RETURN));}
+"while"     { PUSH_TOKEN((yylval.token = WHILE));}
+"True"      { yylval.str = new std::string("true", yyleng);
+              PUSH_TOKEN(TBOOLEAN);}
+"False"     { yylval.str = new std::string("false", yyleng);
+              PUSH_TOKEN(FBOOLEAN);}
+"for"       { PUSH_TOKEN((yylval.token = FOR));}
+"in"        { PUSH_TOKEN((yylval.token = IN));}
+"range"     { PUSH_TOKEN((yylval.token = RANGE));}
 
 [a-zA-Z_][a-zA-Z0-9_]*  {
                 yylval.str = new std::string(yytext, yyleng);

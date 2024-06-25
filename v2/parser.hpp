@@ -83,15 +83,17 @@ extern int yydebug;
     ELIF = 284,                    /* ELIF  */
     ELSE = 285,                    /* ELSE  */
     FOR = 286,                     /* FOR  */
-    NOT = 287,                     /* NOT  */
-    OR = 288,                      /* OR  */
-    WHILE = 289,                   /* WHILE  */
-    SEMICOLON = 290,               /* SEMICOLON  */
-    LPAREN = 291,                  /* LPAREN  */
-    RPAREN = 292,                  /* RPAREN  */
-    COMMA = 293,                   /* COMMA  */
-    LBRACK = 294,                  /* LBRACK  */
-    RBRACK = 295                   /* RBRACK  */
+    IN = 287,                      /* IN  */
+    RANGE = 288,                   /* RANGE  */
+    NOT = 289,                     /* NOT  */
+    OR = 290,                      /* OR  */
+    WHILE = 291,                   /* WHILE  */
+    SEMICOLON = 292,               /* SEMICOLON  */
+    LPAREN = 293,                  /* LPAREN  */
+    RPAREN = 294,                  /* RPAREN  */
+    COMMA = 295,                   /* COMMA  */
+    LBRACK = 296,                  /* LBRACK  */
+    RBRACK = 297                   /* RBRACK  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -106,7 +108,7 @@ union YYSTYPE
   std::string* str;
   int token;
 
-#line 110 "parser.hpp"
+#line 112 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

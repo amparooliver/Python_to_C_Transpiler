@@ -33,7 +33,7 @@ int bandera = 0;
 %token <token> EQUALS PLUS MINUS TIMES DIVIDEDBY
 %token <token> EQ NEQ GT GTE LT LTE RETURN
 %token <token> INDENT DEDENT NEWLINE IF COLON
-%token <token> AND BREAK DEF ELIF ELSE FOR NOT OR WHILE
+%token <token> AND BREAK DEF ELIF ELSE FOR IN RANGE NOT OR WHILE
 %token <token> SEMICOLON LPAREN RPAREN COMMA LBRACK RBRACK
 
 %type <str> expression statement list elements
@@ -101,6 +101,9 @@ statement
         // Limpia la memoria de los punteros utilizados
         delete $1; delete $3;
     }
+    | FOR IDENTIFIER IN RANGE LPAREN INTEGER RPAREN COLON NEWLINE{
+        $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); delete $2; delete $6;
+    }
   ; 
 
 expression
@@ -149,8 +152,7 @@ conditional
   ;
 
 ifelse
-  : IF conditionalExpr COLON NEWLINE {  $$ = new std::string("if(" + *$2 + ") {\n"); delete $2;
-                                }
+  : IF conditionalExpr COLON NEWLINE {  $$ = new std::string("if(" + *$2 + ") {\n"); delete $2;}
   | ELSE COLON NEWLINE { $$ = new std::string("else {"); };
   ;
 
