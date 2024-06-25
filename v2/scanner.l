@@ -38,12 +38,13 @@ yypstate* pstate = yypstate_new();
 } while(0)
 
 
+int comment_start_line;
 std::stack<int> _indent_stack;
 %}
 
 %option noyywrap
-
 %option yylineno
+%x COMMENT
 
 %%
 
@@ -54,9 +55,23 @@ std::stack<int> _indent_stack;
   }
 %}
 
+(\"\"\")           { BEGIN(COMMENT); comment_start_line = yylineno; }
+
+<COMMENT>{
+(\"\"\")           { BEGIN(INITIAL); } // Fin del comentario
+\n               { /* Ignorar saltos de línea dentro del comentario */ }
+.                { /* Ignorar cualquier otro carácter dentro del comentario */ }
+<<EOF>>          { 
+                   std::cerr << "Error: Comentario multilínea sin cerrar. Iniciado en la línea " 
+                             << comment_start_line << std::endl;
+                   yyterminate();
+                 }
+}
+
 ^[ \t]*\r?\n   { /* Ignoramos lineas en blanco */ }
 ^[ \t]*#.*\r?\n    { /* Ignoramos comentarios en una linea fisica */ }
 #.*$        { /* Ignoramos comentarios que estan dps de un statement */ }
+
 
 ^[ \t]+     {
               /**/

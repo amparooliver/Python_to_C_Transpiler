@@ -141,14 +141,18 @@ statement
             else{
               std::cerr << "Error: Asignacion no valida a constante " << *$1 << ". En linea: " << yylineno << std::endl;
             }
+            delete $1; delete $3;
         }else{
           // Si existe no se puede modificar
+
           std::cerr << "Error: Modificacion no valida a constante " << *$1 << ". En linea: " << yylineno << std::endl;
+          delete $1; delete $3;
+           exit(1);
         }
         tipo_actual = 0;
         tipo_actual2 = 0;
         // Limpia la memoria de los punteros utilizados
-        delete $1; delete $3;
+        
     }
     | FOR IDENTIFIER IN RANGE LPAREN INTEGER RPAREN COLON NEWLINE{
         $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); delete $2; delete $6;
