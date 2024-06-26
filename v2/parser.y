@@ -10,7 +10,7 @@
 
 std::map<std::string, std::string> symbol_table; // Tabla de símbolos
 std::string* goalStr;
-//std::string funcProcStr[2];
+std::string* functionDeclarationsStr;
 
 void yyerror(YYLTYPE* loc, const char* err);
 extern int yylex();
@@ -40,8 +40,9 @@ int es_id = 0;
 %token <token> INDENT DEDENT NEWLINE IF COLON
 %token <token> AND BREAK ELIF ELSE FOR IN RANGE NOT OR WHILE DEF
 %token <token> SEMICOLON LPAREN RPAREN COMMA LBRACK RBRACK
+%token <token> PRINT
 
-%type <str> expression statement list elements expression_for
+%type <str> expression statement list elements expression_for parameter_list argument_list argument
 %type <str> conditional conditionalExpr ifelse
 %type <str> flowcontrol program
 
@@ -124,7 +125,7 @@ statement
                   if(symbol_table[*$3] == "int" | symbol_table[*$3] == "float"| symbol_table[*$3] == "double"| symbol_table[*$3] == "bool"){
                     $$ = new std::string(*$1 + " = " + *$3 + ";\n"); }
                   else{
-                    std::cerr << "WARNING1: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+                    std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
                     $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
                 }
               }else if(tipo_actual3 == 1 && tipo_actual != 4 && tipo_actual != 9){ // asignaciones a operaciones de suma resta etc
@@ -132,12 +133,12 @@ statement
                   tipo_actual3 = 0;
               }
               else{ 
-                  std::cerr << "WARNING2: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+                  std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
                   $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
               }
 
           }else{
-              std::cerr << "WARNING3: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+              std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
               $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
           }
         }
@@ -194,22 +195,78 @@ statement
         $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); 
         delete $2; delete $6;
         std::cerr << "Entro a FIR statement \n";
-    }/*
-    | DEF IDENTIFIER LPAREN IDENTIFIER RPAREN COLON NEWLINE{
-          //std::cerr << "ENTRO A DEF" << std::endl;
-          std::stringstream ss;
-          ss << "void " << *$2 << "( int "+ *$4 + ") {\n";
-          funcProcStr[0].append(ss.str());
-        // Agrego a la tabla de simbolos con type proc
-        symbol_table[*$2] = "proc";
-        delete $2; delete $4;
     }
-    | IDENTIFIER LPAREN expression RPAREN NEWLINE {
-      //std::cerr << "ENTRO A llamada" << std::endl;
-      $$ = new std::string(*$1 +"("+ *$3 + ")"); delete $1; delete $3;
-    }*/
-  ; 
+    | DEF IDENTIFIER LPAREN parameter_list RPAREN COLON NEWLINE {
+      std::string funcName = *$2;
+      std::cerr << "Entro a DEF procedure \n";
+      // Verificar si la función ya existe en la tabla de símbolos
+      if (symbol_table.find(funcName) != symbol_table.end()) {
+          std::cerr << "Error: La función '" << funcName << "' ya ha sido declarada. Línea: " << @2.first_line << std::endl;
+          YYERROR;
+      } else {
+          std::string funcDecl = "void " + funcName + "(" + *$4 + ");\n";
+          
+          // Guardar la función en la tabla de símbolos
+          symbol_table[funcName] = "function";
 
+          if (functionDeclarationsStr == nullptr) {
+              functionDeclarationsStr = new std::string(funcDecl);
+          } else {
+              *functionDeclarationsStr += funcDecl;
+          }
+          $$ = new std::string("// Se deberia trasladar esta declaracion fuera del main \nvoid " + funcName + "(" + *$4 + ") {\n");
+      }
+      delete $2; delete $4;
+    }
+    | IDENTIFIER LPAREN argument_list RPAREN NEWLINE{
+      std::string funcName = *$1;
+      std::cerr << "Entro a llamada Proc \n";
+      std::cerr << "argument list: " << *$3 << " \n";
+      if (symbol_table.find(funcName) == symbol_table.end()) {
+        std::cerr << "Error: La función '" << funcName << "' no ha sido declarada. Línea: " << @1.first_line << std::endl;
+        YYERROR;
+      } else {
+        std::cerr << "Entro a la escritura de la llamada \n";
+        $$ = new std::string(*$1 + "(" + *$3 + ");\n");
+      }
+      delete $1; delete $3;
+    }
+  ;
+ parameter_list
+  : /* empty */ { $$ = new std::string(""); }
+  | IDENTIFIER { $$ = new std::string("int " + *$1); delete $1; }
+  | parameter_list COMMA IDENTIFIER {
+      $$ = new std::string(*$1 + ", int " + *$3);
+      delete $1; delete $3;
+    }
+  ;
+argument_list
+  : /* empty */
+    { $$ = new std::string(""); }
+  | argument
+    { $$ = $1; }
+  | argument_list COMMA argument
+    {
+      $$ = new std::string(*$1 + ", " + *$3);
+      delete $1; delete $3;
+    }
+  ;
+argument:
+    INTEGER { $$ = $1; }
+  | FLOAT { $$ = $1; }
+  | DOUBLE {  $$ = $1; }
+  | TBOOLEAN { $$ = $1; }
+  | FBOOLEAN { $$ = $1; }
+  | IDENTIFIER
+    {
+      if (symbol_table.find(*$1) == symbol_table.end()) {
+        std::cerr << "Error: La variable '" << *$1 << "' no ha sido declarada. Línea: " << @1.first_line << std::endl;
+        YYERROR;
+      } else {
+        $$ = $1;
+      }
+    }
+  ;
 expression
   : INTEGER { tipo_actual = 1; tipo_actual2 = 1; $$ = $1; }
   | FLOAT { tipo_actual = 2; tipo_actual2 = 2; $$ = $1; }

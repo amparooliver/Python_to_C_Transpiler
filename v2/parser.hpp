@@ -96,7 +96,8 @@ extern int yydebug;
     RPAREN = 297,                  /* RPAREN  */
     COMMA = 298,                   /* COMMA  */
     LBRACK = 299,                  /* LBRACK  */
-    RBRACK = 300                   /* RBRACK  */
+    RBRACK = 300,                  /* RBRACK  */
+    PRINT = 301                    /* PRINT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -111,7 +112,7 @@ union YYSTYPE
   std::string* str;
   int token;
 
-#line 115 "parser.hpp"
+#line 116 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

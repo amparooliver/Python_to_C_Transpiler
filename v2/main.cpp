@@ -6,7 +6,7 @@
 extern int yylex();
 extern std::map<std::string, std::string> symbol_table;
 extern std::string* goalStr;
-
+extern std::string* functionDeclarationsStr;
 
 int main(int argc, char const *argv[]) {
     std::ofstream output_file("output.c");
@@ -19,6 +19,13 @@ int main(int argc, char const *argv[]) {
 
     // Generar el archivo output.c
     output_file << "#include <stdio.h>\n\n";
+
+    // Imprimir declaraciones de funciones
+    if (functionDeclarationsStr) {
+        output_file << *functionDeclarationsStr << "\n";
+        delete functionDeclarationsStr;
+    }
+    
     output_file << "int main() {\n\n";
 
     if (goalStr) {

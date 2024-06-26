@@ -148,6 +148,7 @@ std::stack<int> _indent_stack;
 "in"        { PUSH_TOKEN((yylval.token = IN));}
 "range"     { PUSH_TOKEN((yylval.token = RANGE));}
 "def"       { PUSH_TOKEN((yylval.token = DEF));}
+"print"     { PUSH_TOKEN((yylval.token = DEF));}
 
 [A-Z][A-Z0-9_]*           {yylval.str = new std::string(yytext, yyleng);
                           PUSH_TOKEN(CONSTANT);}
@@ -169,7 +170,7 @@ std::stack<int> _indent_stack;
 
 (\'[^\']\')                  {yylval.str = new std::string(yytext, yyleng);
                               PUSH_TOKEN(CHAR);}
-                              
+
 "="         { PUSH_TOKEN((yylval.token = EQUALS));} 
 "+"         { PUSH_TOKEN((yylval.token = PLUS));}
 "-"         {  PUSH_TOKEN((yylval.token = MINUS)); }

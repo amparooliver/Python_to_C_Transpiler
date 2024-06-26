@@ -1,29 +1,20 @@
 #include <stdio.h>
 
+void recipeMenu();
+void conParametros(int a, int b);
+
 int main() {
 
-int i = 0;
-int limite_externo = 3;
-int limite_interno = 5;
-int resultado = 1;
-int stmt = 1;
-while (i < limite_externo) {
-	if(i == 0) {
-	if(i != 0) {
-	for (int j = 0; j <  limite_interno; j++) {
-	if(j == 5) {
-	stmt = 2;
-} else {
-
-	stmt = 3;
+// Se deberia trasladar esta declaracion fuera del main 
+void recipeMenu() {
+	int a = 2;
 }
+// Se deberia trasladar esta declaracion fuera del main 
+void conParametros(int a, int b) {
+	int c = a + b;
 }
-char stmt2[] = "O podria marcar la dedentacion con otro statement";
-}
-}
-i = i + 1;
-}
-int resultado_final = resultado;
+conParametros(2, 3);
+recipeMenu();
 
 return 0;
 }
