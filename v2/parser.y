@@ -18,6 +18,7 @@ extern int yylineno;
 
 int tipo_actual = 0;
 int tipo_actual2 = 0;
+int es_id = 0;
 
 %}
 
@@ -32,14 +33,14 @@ int tipo_actual2 = 0;
 %define api.pure full
 %define api.push-pull push
 
-%token <str> IDENTIFIER INTEGER TBOOLEAN FBOOLEAN FLOAT STRING DOUBLE CONSTANT
+%token <str> IDENTIFIER INTEGER TBOOLEAN FBOOLEAN FLOAT STRING CHAR DOUBLE CONSTANT
 %token <token> EQUALS PLUS MINUS TIMES DIVIDEDBY
 %token <token> EQ NEQ GT GTE LT LTE RETURN
 %token <token> INDENT DEDENT NEWLINE IF COLON
 %token <token> AND BREAK ELIF ELSE FOR IN RANGE NOT OR WHILE DEF
 %token <token> SEMICOLON LPAREN RPAREN COMMA LBRACK RBRACK
 
-%type <str> expression statement list elements
+%type <str> expression statement list elements expression_for
 %type <str> conditional conditionalExpr ifelse
 %type <str> flowcontrol program
 
@@ -62,13 +63,14 @@ program
   ;
 
 statement
-  : conditional {$$ = new std::string(*$1); delete $1; }
-  | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;}
-  | DEDENT { $$ = new std::string("}"); }
-  | INDENT statement {$$ = new std::string(*$2); delete $2; }//std::cerr << "Entro a INDENT statement\n";}
+  : conditional {$$ = new std::string(*$1); delete $1; std::cerr << "Entro a conditional \n";}
+  | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional \n";}
+  | DEDENT { $$ = new std::string("}");  std::cerr << "Entro a DEDENT \n";}
+  | INDENT statement {$$ = new std::string(*$2); delete $2; std::cerr << "Entro a INDENT statement \n"; }
   /*| INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }*/
-  | INDENT flowcontrol NEWLINE DEDENT DEDENT { $$ = new std::string(*$2 + "; \n}\n}\n"); delete $2; }
+  | INDENT flowcontrol NEWLINE DEDENT DEDENT{ $$ = new std::string("break; \n}\n}\n"); delete $2; std::cerr << "Entro a INDENT flowcontrol \n";}
   | IDENTIFIER EQUALS expression NEWLINE {
+        std::cerr << "Entro a ID EQUALS statement \n";
         // Si no existe el id, se genera una declaracion
         if (symbol_table.find(*$1) == symbol_table.end()) {
             // Determina el tipo del identificador
@@ -97,7 +99,7 @@ statement
                 ss << "float " << *$1 << "[] = " << *$3 << ";\n";
                 $$ = new std::string(ss.str());
             }
-            else if(type == "lista" && tipo_actual2 == 3){ // ES UN ARRAY CHAR ARRAY (ojo que acepta sitring tb y deberia ser otra declaracion)
+            else if(type == "lista" && tipo_actual2 == 3){ // ES UN CHARACTER ARRAY
                 ss << "char " << *$1 << "[] = " << *$3 << ";\n";
                 $$ = new std::string(ss.str());
             }
@@ -154,7 +156,9 @@ statement
         // Limpia la memoria de los punteros utilizados
         
     }
-    | FOR IDENTIFIER IN RANGE LPAREN INTEGER RPAREN COLON NEWLINE{
+    | FOR IDENTIFIER IN RANGE LPAREN expression_for RPAREN COLON NEWLINE{
+      // realizar verificacion, si es_id == 1, entonces verificar que su tipo sea int en la tabla de simbolos, sino error
+      // verificar si ya se declaro o no la variable
         $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); delete $2; delete $6;
     }/*
     | DEF IDENTIFIER LPAREN IDENTIFIER RPAREN COLON NEWLINE{
@@ -180,7 +184,8 @@ expression
   | FBOOLEAN { tipo_actual = 3; $$ = $1; }
   | IDENTIFIER {tipo_actual = 6;$$ = $1; }
   | CONSTANT {tipo_actual = 8;$$ = $1; }
-  | STRING {  tipo_actual = 4; tipo_actual2 = 3; $$ = $1; }
+  | STRING {  tipo_actual = 4; $$ = $1; }
+  | CHAR {  tipo_actual = 9; tipo_actual2 = 3; $$ = $1; }
   | LPAREN expression RPAREN {  $$ = new std::string("(" + *$2 + ")"); delete $2;}
   | expression PLUS expression { $$ =  new std::string(*$1 + " + " + *$3); delete $1; delete $3;} 
   | expression MINUS expression { $$ =  new std::string(*$1 + " - " + *$3); delete $1; delete $3;} 
@@ -188,9 +193,13 @@ expression
   | expression DIVIDEDBY expression { $$ =  new std::string(*$1 + " / " + *$3); delete $1; delete $3;}  
   | list { tipo_actual = 5; $$ = $1; }                              
   ;
+expression_for
+  : INTEGER { $$ = $1; }
+  | IDENTIFIER {es_id = 1; $$ = $1; }
+  ;
 list
   : LBRACK RBRACK { $$ = new std::string("[]"); }
-  | LBRACK elements RBRACK { $$ = new std::string("[" + *$2 + "]"); delete $2; }
+  | LBRACK elements RBRACK { $$ = new std::string("{" + *$2 + "}"); delete $2; }
   ;
 elements
   : expression { $$ = new std::string(*$1); delete $1; }

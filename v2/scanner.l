@@ -167,6 +167,9 @@ std::stack<int> _indent_stack;
 (\"[^\"]+\")            {yylval.str = new std::string(yytext, yyleng);
                         PUSH_TOKEN(STRING);}
 
+(\'[^\']\')                  {yylval.str = new std::string(yytext, yyleng);
+                              PUSH_TOKEN(CHAR);}
+                              
 "="         { PUSH_TOKEN((yylval.token = EQUALS));} 
 "+"         { PUSH_TOKEN((yylval.token = PLUS));}
 "-"         {  PUSH_TOKEN((yylval.token = MINUS)); }
