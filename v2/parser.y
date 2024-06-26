@@ -65,7 +65,8 @@ program
 
 statement
   : conditional {$$ = new std::string(*$1); delete $1; std::cerr << "Entro a conditional \n";}
-  | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional \n";}
+  | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional 2\n";}
+  | DEDENT conditional statement DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional 1 \n";}
   | DEDENT { $$ = new std::string("}");  std::cerr << "Entro a DEDENT \n";}
   | INDENT statement {$$ = new std::string(*$2); delete $2; std::cerr << "Entro a INDENT statement \n"; }
   /*| INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }*/
@@ -252,6 +253,7 @@ conditionalExpr
   | conditionalExpr GTE conditionalExpr {  $$ = new std::string(*$1 + " >= " + *$3); delete $1; delete $3;}
   | conditionalExpr NEQ conditionalExpr {  $$ = new std::string(*$1 + " != " + *$3); delete $1; delete $3;}
   | conditionalExpr EQ conditionalExpr {  $$ = new std::string(*$1 + " == " + *$3); delete $1; delete $3;}
+  | AND conditionalExpr {  $$ = new std::string(" && " + *$2 ); delete $2;}
   ;
 
 conditional
@@ -260,8 +262,9 @@ conditional
   ;
 
 ifelse
-  : IF conditionalExpr COLON NEWLINE {  $$ = new std::string("if(" + *$2 + ") {\n"); delete $2;}
-  | ELSE COLON NEWLINE { $$ = new std::string("else {"); };
+  : IF conditionalExpr COLON NEWLINE {  $$ = new std::string("if(" + *$2 + ") {\n"); delete $2; std::cerr << "Entro a IF \n";}
+  | ELSE COLON NEWLINE { $$ = new std::string("else {\n"); std::cerr << "Entro a ELSE \n";};
+  | ELIF conditionalExpr COLON NEWLINE {  $$ = new std::string("else if(" + *$2 + ") {"); delete $2; std::cerr << "Entro a ELIF statement \n";}
   ;
 
 flowcontrol

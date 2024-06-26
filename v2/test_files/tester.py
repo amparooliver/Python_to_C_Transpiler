@@ -1,9 +1,19 @@
 
-# Bucle for anidado para calcular productos
+# Ejemplo if elif
 
-producto = 0 
-a = 2
-for i in range(4):  # Itera sobre i = 1, 2, 3
-    for j in range(a):  # Itera sobre j = 1, 2, 3
-        producto = i * j  # Realiza la operación matemática
+edad = 25
+otro = 1
+puede_votar = False
+if edad < 18:
+    puede_votar = False
+    otro = 0
+
+elif edad >18:
+    puede_votar = True
+
+else:
+    puede_votar = True
+    otro = 0
+
+
 
