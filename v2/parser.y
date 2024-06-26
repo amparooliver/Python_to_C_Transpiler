@@ -89,7 +89,7 @@ statement
             symbol_table[*$1] = type;
             // Construye la cadena de asignación para el output.c
             std::stringstream ss;
-            if (type == "char"){
+            if (type == "char"){ // Es una cadena char str[] = "GeeksforGeeks";
                 ss << type << " " << *$1 << "[] = " << *$3 << ";\n";
                 $$ = new std::string(ss.str());
             }else if(type == "lista" && tipo_actual2 == 1){ // ES UN ARRAY INT
@@ -109,17 +109,34 @@ statement
             }
 
         } else { 
-          // Si ya existe, la asignacion tiene que ser valida para c
-          std::string type = symbol_table[*$1];
-          if (type == "lista") {
-            std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion, ya que se necesita la cantidad de elementos iniciales para validar."<< std::endl;
-            $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Esta asignacion deberia ser por indices, asegurando la cantidad de elem \n"); 
+          // MANEJO DE ASIGNACIONES A VARIABLES DE DISTINTOS TIPOS
+
+          // SI EL ID ES UN INT o UN FLOAT o un BOOL o un DOUBLE
+          if(symbol_table[*$1] == "int" | symbol_table[*$1] == "float" | symbol_table[*$1] == "bool" | symbol_table[*$1] == "double" ){
+
+              // Si la asignacion es a un INT, FLOAT, DOUBLE, BOOL (TRUE OR FALSE) --> la realizo sin prob
+              if(tipo_actual == 1 | tipo_actual == 2 | tipo_actual == 7 | tipo_actual == 3){
+                  $$ = new std::string(*$1 + " = " + *$3 + ";\n"); 
+              }else if(tipo_actual == 6){ // Si la asignacion es a otro IDENTIFIER
+                  // Si la asignacion es a un INT, FLOAT, DOUBLE, BOOL (TRUE OR FALSE) --> la realizo sin prob
+                  if(symbol_table[*$3] == "int" | symbol_table[*$3] == "float"| symbol_table[*$3] == "double"| symbol_table[*$3] == "bool"){
+                    $$ = new std::string(*$1 + " = " + *$3 + ";\n"); }
+                  else{
+                    std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+                    $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
+                }
+              }else{ 
+                  std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+                  $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
+              }
+
           }else{
-            $$ = new std::string(*$1 + " = " + *$3 + ";\n"); 
+              std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+              $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
           }
         }
-          tipo_actual = 0;
-          tipo_actual2 = 0;
+        tipo_actual = 0;
+        tipo_actual2 = 0;
         // Limpia la memoria de los punteros utilizados
         delete $1; delete $3;
     }

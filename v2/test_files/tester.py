@@ -1,13 +1,16 @@
-# Asignaciones validas
-numero = 45
-var1 = 1
-var_float = 1.5
-pi_double = 3.14159265359
-varConTexto = "Hola!"
-BoolVar = True
+
+# Declaraciones validas
+a = 45
+b = 1.5
+c = True
+var_string = "Hola!"
 var_lista = [1, 2, 3, 4, 5] # Las listas no existen en C, se usan arrays
-lista_con_letras = ['h', 'c', 'e'] # array de caracteres
-CONSTANTE = 1234
+
+# Asignaciones a variables existentes
+a = 40.5 
+b = False
+c = a
+var_string = 1
+var_lista = 1
 
 
-lista_con_letras = ['k', 'g', 'e']

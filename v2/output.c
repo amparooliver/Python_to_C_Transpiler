@@ -2,16 +2,16 @@
 
 int main() {
 
-int numero = 45;
-int var1 = 1;
-float var_float = 1.5;
-double pi_double = 3.14159265359;
-char varConTexto[] = "Hola!";
-bool BoolVar = true;
+int a = 45;
+float b = 1.5;
+bool c = true;
+char var_string[] = "Hola!";
 int var_lista[] = {1, 2, 3, 4, 5};
-char lista_con_letras[] = {'h', 'c', 'e'};
-const int CONSTANTE = 1234;
-// lista_con_letras = {'k', 'g', 'e'}; // Esta asignacion deberia ser por indices, asegurando la cantidad de elem 
+a = 40.5;
+b = false;
+c = a;
+// var_string = 1; // Asignacion no valida en C, revisar si afecta el flujo 
+// var_lista = 1; // Asignacion no valida en C, revisar si afecta el flujo 
 
 return 0;
 }
