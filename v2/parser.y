@@ -67,8 +67,8 @@ statement
   : conditional {$$ = new std::string(*$1); delete $1; std::cerr << "Entro a conditional \n";}
   | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional 2\n";}
   | DEDENT conditional statement DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional 1 \n";}
-  | DEDENT { $$ = new std::string("}");  std::cerr << "Entro a DEDENT \n";}
-  | INDENT statement {$$ = new std::string(*$2); delete $2; std::cerr << "Entro a INDENT statement \n"; }
+  | DEDENT { $$ = new std::string("}\n");  std::cerr << "Entro a DEDENT \n";}
+  | INDENT statement {$$ = new std::string("\t" + *$2); delete $2; std::cerr << "Entro a INDENT statement \n"; }
   /*| INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }*/
   | INDENT flowcontrol NEWLINE DEDENT DEDENT{ $$ = new std::string("break; \n}\n}\n"); delete $2; std::cerr << "Entro a INDENT flowcontrol \n";}
   | IDENTIFIER EQUALS expression NEWLINE {
@@ -191,7 +191,9 @@ statement
     | FOR IDENTIFIER IN RANGE LPAREN expression_for RPAREN COLON NEWLINE{
       // realizar verificacion, si es_id == 1, entonces verificar que su tipo sea int en la tabla de simbolos, sino error
       // verificar si ya se declaro o no la variable
-        $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); delete $2; delete $6;
+        $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); 
+        delete $2; delete $6;
+        std::cerr << "Entro a FIR statement \n";
     }/*
     | DEF IDENTIFIER LPAREN IDENTIFIER RPAREN COLON NEWLINE{
           //std::cerr << "ENTRO A DEF" << std::endl;
