@@ -18,6 +18,7 @@ extern int yylineno;
 
 int tipo_actual = 0;
 int tipo_actual2 = 0;
+int tipo_actual3 = 0;
 int es_id = 0;
 
 %}
@@ -117,21 +118,25 @@ statement
               // Si la asignacion es a un INT, FLOAT, DOUBLE, BOOL (TRUE OR FALSE) --> la realizo sin prob
               if(tipo_actual == 1 | tipo_actual == 2 | tipo_actual == 7 | tipo_actual == 3){
                   $$ = new std::string(*$1 + " = " + *$3 + ";\n"); 
-              }else if(tipo_actual == 6){ // Si la asignacion es a otro IDENTIFIER
+              }else if(tipo_actual == 6 && tipo_actual3 == 0){ // Si la asignacion es a otro IDENTIFIER
                   // Si la asignacion es a un INT, FLOAT, DOUBLE, BOOL (TRUE OR FALSE) --> la realizo sin prob
                   if(symbol_table[*$3] == "int" | symbol_table[*$3] == "float"| symbol_table[*$3] == "double"| symbol_table[*$3] == "bool"){
                     $$ = new std::string(*$1 + " = " + *$3 + ";\n"); }
                   else{
-                    std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+                    std::cerr << "WARNING1: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
                     $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
                 }
-              }else{ 
-                  std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+              }else if(tipo_actual3 == 1 && tipo_actual != 4 && tipo_actual != 9){ // asignaciones a operaciones de suma resta etc
+                  $$ = new std::string(*$1 + " = " + *$3 + ";\n"); 
+                  tipo_actual3 = 0;
+              }
+              else{ 
+                  std::cerr << "WARNING2: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
                   $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
               }
 
           }else{
-              std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
+              std::cerr << "WARNING3: No se puede realizar la traduccion de esta asignacion en C"<< std::endl;
               $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
           }
         }
@@ -213,10 +218,10 @@ expression
   | STRING {  tipo_actual = 4; $$ = $1; }
   | CHAR {  tipo_actual = 9; tipo_actual2 = 3; $$ = $1; }
   | LPAREN expression RPAREN {  $$ = new std::string("(" + *$2 + ")"); delete $2;}
-  | expression PLUS expression { $$ =  new std::string(*$1 + " + " + *$3); delete $1; delete $3;} 
-  | expression MINUS expression { $$ =  new std::string(*$1 + " - " + *$3); delete $1; delete $3;} 
-  | expression TIMES expression { $$ =  new std::string(*$1 + " * " + *$3); delete $1; delete $3;} 
-  | expression DIVIDEDBY expression { $$ =  new std::string(*$1 + " / " + *$3); delete $1; delete $3;}  
+  | expression PLUS expression { tipo_actual3 = 1;$$ =  new std::string(*$1 + " + " + *$3); delete $1; delete $3;} 
+  | expression MINUS expression { tipo_actual3 = 1;$$ =  new std::string(*$1 + " - " + *$3); delete $1; delete $3;} 
+  | expression TIMES expression { tipo_actual3 = 1;$$ =  new std::string(*$1 + " * " + *$3); delete $1; delete $3;} 
+  | expression DIVIDEDBY expression { tipo_actual3 = 1;$$ =  new std::string(*$1 + " / " + *$3); delete $1; delete $3;}  
   | list { tipo_actual = 5; $$ = $1; }                              
   ;
 expression_for

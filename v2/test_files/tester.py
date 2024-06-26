@@ -1,16 +1,9 @@
 
-# Declaraciones validas
-a = 45
-b = 1.5
-c = True
-var_string = "Hola!"
-var_lista = [1, 2, 3, 4, 5] # Las listas no existen en C, se usan arrays
+# Bucle for anidado para calcular productos
 
-# Asignaciones a variables existentes
-a = 40.5 
-b = False
-c = a
-var_string = 1
-var_lista = 1
-
+producto = 0 
+a = 2
+for i in range(4):  # Itera sobre i = 1, 2, 3
+    for j in range(a):  # Itera sobre j = 1, 2, 3
+        producto = i * j  # Realiza la operación matemática
 
