@@ -108,7 +108,16 @@ statement
                 $$ = new std::string(ss.str());
             }
 
-        } else { $$ = new std::string(*$1 + " = " + *$3 + ";\n"); } // Ya existe entonces, se asigna nada mas
+        } else { 
+          // Si ya existe, la asignacion tiene que ser valida para c
+          std::string type = symbol_table[*$1];
+          if (type == "lista") {
+            std::cerr << "WARNING: No se puede realizar la traduccion de esta asignacion, ya que se necesita la cantidad de elementos iniciales para validar."<< std::endl;
+            $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Esta asignacion deberia ser por indices, asegurando la cantidad de elem \n"); 
+          }else{
+            $$ = new std::string(*$1 + " = " + *$3 + ";\n"); 
+          }
+        }
           tipo_actual = 0;
           tipo_actual2 = 0;
         // Limpia la memoria de los punteros utilizados

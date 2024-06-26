@@ -11,6 +11,7 @@ bool BoolVar = true;
 int var_lista[] = {1, 2, 3, 4, 5};
 char lista_con_letras[] = {'h', 'c', 'e'};
 const int CONSTANTE = 1234;
+// lista_con_letras = {'k', 'g', 'e'}; // Esta asignacion deberia ser por indices, asegurando la cantidad de elem 
 
 return 0;
 }
