@@ -1,6 +1,7 @@
 # Asignaciones validas
-numero = 45
-var1 = 1
-var_float = 1.5
-CONSTANTE = 2
-CONSTANTE = 3
+CONSTANTE_INT = 2
+CONSTANTE_FLOAT = 40.5
+
+# Cambio no valido
+CONSTANTE_INT = 10000
+

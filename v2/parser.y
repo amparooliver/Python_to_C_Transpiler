@@ -40,7 +40,7 @@ int es_id = 0;
 %token <token> INDENT DEDENT NEWLINE IF COLON
 %token <token> AND BREAK ELIF ELSE FOR IN RANGE NOT OR WHILE DEF
 %token <token> SEMICOLON LPAREN RPAREN COMMA LBRACK RBRACK
-%token <token> PRINT
+%token <token> PRINT UNKNOWN
 
 %type <str> expression statement list elements expression_for parameter_list argument_list argument
 %type <str> conditional conditionalExpr ifelse
@@ -179,10 +179,9 @@ statement
             delete $1; delete $3;
         }else{
           // Si existe no se puede modificar
-
+          $$ = new std::string("// " + *$1 + " = " + *$3 + "; // Asignacion no valida en C, revisar si afecta el flujo \n");
           std::cerr << "Error: Modificacion no valida a constante " << *$1 << ". En linea: " << yylineno << std::endl;
           delete $1; delete $3;
-           exit(1);
         }
         tipo_actual = 0;
         tipo_actual2 = 0;
@@ -202,7 +201,7 @@ statement
       // Verificar si la función ya existe en la tabla de símbolos
       if (symbol_table.find(funcName) != symbol_table.end()) {
           std::cerr << "Error: La función '" << funcName << "' ya ha sido declarada. Línea: " << @2.first_line << std::endl;
-          YYERROR;
+          //YYERROR;
       } else {
           std::string funcDecl = "void " + funcName + "(" + *$4 + ");\n";
           
@@ -231,6 +230,15 @@ statement
       }
       delete $1; delete $3;
     }
+    | UNKNOWN NEWLINE{
+      std::cerr << "Error: Simbolo desconocido: " << $1 << ". En linea: " << yylineno << std::endl;
+      std::cerr << "No se traslado a la traduccion " << std::endl;
+    }
+    | error NEWLINE
+    {
+      std::cerr << "Error de sintaxis en la línea " << ". En linea: " << yylineno << std::endl;
+    }
+  ;
   ;
  parameter_list
   : /* empty */ { $$ = new std::string(""); }
@@ -333,6 +341,6 @@ flowcontrol
 %%
 
 void yyerror(YYLTYPE* loc, const char* err) {
-  std::cerr << "Error: " << err << std::endl;
-
+  std::cerr << "Error de sintaxis en la línea "  << yylineno << std::endl;
+  exit(1);
 }

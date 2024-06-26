@@ -189,10 +189,6 @@ std::stack<int> _indent_stack;
 "["         { PUSH_TOKEN((yylval.token = LBRACK));}
 "]"         { PUSH_TOKEN((yylval.token = RBRACK));}
 
-.           {
-              std::cerr << "Simbolo no reconocido en la linea " << yylineno << " --> "
-                << yytext << std::endl;
-              return 1;
-            }
+.           { PUSH_TOKEN((yylval.token = UNKNOWN));}
 
 %%
