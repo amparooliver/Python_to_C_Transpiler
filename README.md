@@ -22,21 +22,4 @@ g++ main.cpp parser.cpp scanner.cpp -o parser
 ### Resultado
 El resultado de la traducción se creará en un archivo llamado `output.c`.
 
-### Compilación y Ejecución de la V1 (version vieja y simple)
-Para compilar y probar la versión simplificada del transpilador, sigue estos pasos desde la carpeta  `simple_version_first`:
 
-1. Generación del Analizador Léxico y Sintáctico:
-```
-flex simple_python_lexer.l
-bison -d simple_python_parser.y
-```
-2. Compilación del Código:
-```
-gcc -o parser simple_python_parser.tab.c lex.yy.c -lfl
-```
-3. Ejecución:
-```
-./parser < input.txt
-```
-### Resultado
-El resultado de la traducción se creará en un archivo llamado `output.c`.
