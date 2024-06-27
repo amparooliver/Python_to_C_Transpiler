@@ -65,15 +65,15 @@ program
   ;
 
 statement
-  : conditional {$$ = new std::string(*$1); delete $1; std::cerr << "Entro a conditional \n";}
-  | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional 2\n";}
-  | DEDENT conditional statement DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n"); delete $2; delete $3;  std::cerr << "Entro a DEDENT conditional 1 \n";}
-  | DEDENT { $$ = new std::string("}\n");  std::cerr << "Entro a DEDENT \n";}
-  | INDENT statement {$$ = new std::string("\t" + *$2); delete $2; std::cerr << "Entro a INDENT statement \n"; }
+  : conditional {$$ = new std::string(*$1); delete $1;}
+  | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3; }
+  | DEDENT conditional statement DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n"); delete $2; delete $3; }
+  | DEDENT { $$ = new std::string("}\n"); }
+  | INDENT statement {$$ = new std::string("\t" + *$2); delete $2; }
   /*| INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }*/
-  | INDENT flowcontrol NEWLINE DEDENT DEDENT{ $$ = new std::string("break; \n}\n}\n"); delete $2; std::cerr << "Entro a INDENT flowcontrol \n";}
+  | INDENT flowcontrol NEWLINE DEDENT DEDENT{ $$ = new std::string("break; \n}\n}\n"); delete $2; }
   | IDENTIFIER EQUALS expression NEWLINE {
-        std::cerr << "Entro a ID EQUALS statement \n";
+        //std::cerr << "Entro a ID EQUALS statement \n";
         // Si no existe el id, se genera una declaracion
         if (symbol_table.find(*$1) == symbol_table.end()) {
             // Determina el tipo del identificador
@@ -193,11 +193,11 @@ statement
       // verificar si ya se declaro o no la variable
         $$ = new std::string("for (int " + *$2 + " = 0; " + *$2 + " <  " + *$6 + "; " + *$2 + "++) {\n"); 
         delete $2; delete $6;
-        std::cerr << "Entro a FIR statement \n";
+        //std::cerr << "Entro a FIR statement \n";
     }
     | DEF IDENTIFIER LPAREN parameter_list RPAREN COLON NEWLINE {
       std::string funcName = *$2;
-      std::cerr << "Entro a DEF procedure \n";
+      //std::cerr << "Entro a DEF procedure \n";
       // Verificar si la función ya existe en la tabla de símbolos
       if (symbol_table.find(funcName) != symbol_table.end()) {
           std::cerr << "Error: La función '" << funcName << "' ya ha sido declarada. Línea: " << @2.first_line << std::endl;
@@ -219,16 +219,52 @@ statement
     }
     | IDENTIFIER LPAREN argument_list RPAREN NEWLINE{
       std::string funcName = *$1;
-      std::cerr << "Entro a llamada Proc \n";
-      std::cerr << "argument list: " << *$3 << " \n";
+      //std::cerr << "Entro a llamada Proc \n";
+      //std::cerr << "argument list: " << *$3 << " \n";
       if (symbol_table.find(funcName) == symbol_table.end()) {
         std::cerr << "Error: La función '" << funcName << "' no ha sido declarada. Línea: " << @1.first_line << std::endl;
         YYERROR;
       } else {
-        std::cerr << "Entro a la escritura de la llamada \n";
+        //std::cerr << "Entro a la escritura de la llamada \n";
         $$ = new std::string(*$1 + "(" + *$3 + ");\n");
       }
       delete $1; delete $3;
+    }
+    | PRINT LPAREN expression RPAREN NEWLINE{
+        //std::cerr << "Entro a PRINT \n";      
+        std::string printFormat;
+        std::string expressionStr = *$3;
+            
+        if (tipo_actual == 4) { // Es un STRING
+            printFormat = "printf(" + expressionStr + ");\n";
+            //std::cerr << "Entro a es un string\n";   
+        } else if (tipo_actual == 6) { // Es un IDENTIFIER
+              //std::cerr << "Entro a es un ID \n";           
+            if (symbol_table.find(expressionStr) != symbol_table.end()) {
+                std::string type = symbol_table[expressionStr];
+                if (type == "int" || type == "const int") {
+                    printFormat = "printf(\"%d\", " + expressionStr + ");\n";
+                } else if (type == "float") {
+                    printFormat = "printf(\"%f\", " + expressionStr + ");\n";
+                } else if (type == "double") {
+                    printFormat = "printf(\"%lf\", " + expressionStr + ");\n";
+                }else{
+                  std::cerr << "WARNING: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
+                }
+            } else {
+                std::cerr << "WARNING: Variable " << expressionStr << " no encontrada en la tabla de símbolos." << ". En linea: " << yylineno << std::endl;
+                printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
+            }
+        } else {
+                  std::cerr << "WARNING: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
+          }
+        tipo_actual = 0;
+        tipo_actual2 = 0;
+        tipo_actual3 = 0;
+        $$ = new std::string(printFormat);
+        delete $3;
     }
     | UNKNOWN NEWLINE{
       std::cerr << "Error: Simbolo desconocido: " << $1 << ". En linea: " << yylineno << std::endl;
@@ -329,9 +365,9 @@ conditional
   ;
 
 ifelse
-  : IF conditionalExpr COLON NEWLINE {  $$ = new std::string("if(" + *$2 + ") {\n"); delete $2; std::cerr << "Entro a IF \n";}
-  | ELSE COLON NEWLINE { $$ = new std::string("else {\n"); std::cerr << "Entro a ELSE \n";};
-  | ELIF conditionalExpr COLON NEWLINE {  $$ = new std::string("else if(" + *$2 + ") {"); delete $2; std::cerr << "Entro a ELIF statement \n";}
+  : IF conditionalExpr COLON NEWLINE {  $$ = new std::string("if(" + *$2 + ") {\n"); delete $2;}
+  | ELSE COLON NEWLINE { $$ = new std::string("else {\n");};
+  | ELIF conditionalExpr COLON NEWLINE {  $$ = new std::string("else if(" + *$2 + ") {"); delete $2;}
   ;
 
 flowcontrol
@@ -342,5 +378,5 @@ flowcontrol
 
 void yyerror(YYLTYPE* loc, const char* err) {
   std::cerr << "Error de sintaxis en la línea "  << yylineno << std::endl;
-  exit(1);
+  //exit(1);
 }

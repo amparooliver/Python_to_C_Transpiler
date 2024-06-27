@@ -1,7 +1,13 @@
-# Asignaciones validas
-CONSTANTE_INT = 2
-CONSTANTE_FLOAT = 40.5
+# Python
+# Inicialización de una variable string
+variable = "Hello World!!!"
+# Cambiamos el tipo de variable
+variable = 2024
+# Inicialización de una variable int
+numero = 10
+# Asignación de un float a la variable int
+numero = 10.567
 
-# Cambio no valido
-CONSTANTE_INT = 10000
+print(variable)  
+print(numero)    # Debería truncar e imprimir 10 # Siempre hacer un ENTER despues de escribir la ultima linea!!
 
