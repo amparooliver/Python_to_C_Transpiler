@@ -1461,44 +1461,44 @@ yyreduce:
 
   case 5: /* statement: conditional  */
 #line 68 "parser.y"
-                {(yyval.str) = new std::string(*(yyvsp[0].str)); delete (yyvsp[0].str); std::cerr << "Entro a conditional \n";}
+                {(yyval.str) = new std::string(*(yyvsp[0].str)); delete (yyvsp[0].str);}
 #line 1466 "parser.cpp"
     break;
 
   case 6: /* statement: DEDENT conditional statement DEDENT DEDENT  */
 #line 69 "parser.y"
-                                               { (yyval.str) = new std::string("} " + *(yyvsp[-3].str) + "\n" + *(yyvsp[-2].str) + "}\n}\n"); delete (yyvsp[-3].str); delete (yyvsp[-2].str);  std::cerr << "Entro a DEDENT conditional 2\n";}
+                                               { (yyval.str) = new std::string("} " + *(yyvsp[-3].str) + "\n" + *(yyvsp[-2].str) + "}\n}\n"); delete (yyvsp[-3].str); delete (yyvsp[-2].str); }
 #line 1472 "parser.cpp"
     break;
 
   case 7: /* statement: DEDENT conditional statement DEDENT  */
 #line 70 "parser.y"
-                                        { (yyval.str) = new std::string("} " + *(yyvsp[-2].str) + "\n" + *(yyvsp[-1].str) + "}\n"); delete (yyvsp[-2].str); delete (yyvsp[-1].str);  std::cerr << "Entro a DEDENT conditional 1 \n";}
+                                        { (yyval.str) = new std::string("} " + *(yyvsp[-2].str) + "\n" + *(yyvsp[-1].str) + "}\n"); delete (yyvsp[-2].str); delete (yyvsp[-1].str); }
 #line 1478 "parser.cpp"
     break;
 
   case 8: /* statement: DEDENT  */
 #line 71 "parser.y"
-           { (yyval.str) = new std::string("}\n");  std::cerr << "Entro a DEDENT \n";}
+           { (yyval.str) = new std::string("}\n"); }
 #line 1484 "parser.cpp"
     break;
 
   case 9: /* statement: INDENT statement  */
 #line 72 "parser.y"
-                     {(yyval.str) = new std::string("\t" + *(yyvsp[0].str)); delete (yyvsp[0].str); std::cerr << "Entro a INDENT statement \n"; }
+                     {(yyval.str) = new std::string("\t" + *(yyvsp[0].str)); delete (yyvsp[0].str); }
 #line 1490 "parser.cpp"
     break;
 
   case 10: /* statement: INDENT flowcontrol NEWLINE DEDENT DEDENT  */
 #line 74 "parser.y"
-                                            { (yyval.str) = new std::string("break; \n}\n}\n"); delete (yyvsp[-3].str); std::cerr << "Entro a INDENT flowcontrol \n";}
+                                            { (yyval.str) = new std::string("break; \n}\n}\n"); delete (yyvsp[-3].str); }
 #line 1496 "parser.cpp"
     break;
 
   case 11: /* statement: IDENTIFIER EQUALS expression NEWLINE  */
 #line 75 "parser.y"
                                          {
-        std::cerr << "Entro a ID EQUALS statement \n";
+        //std::cerr << "Entro a ID EQUALS statement \n";
         // Si no existe el id, se genera una declaracion
         if (symbol_table.find(*(yyvsp[-3].str)) == symbol_table.end()) {
             // Determina el tipo del identificador
@@ -1628,7 +1628,7 @@ yyreduce:
       // verificar si ya se declaro o no la variable
         (yyval.str) = new std::string("for (int " + *(yyvsp[-7].str) + " = 0; " + *(yyvsp[-7].str) + " <  " + *(yyvsp[-3].str) + "; " + *(yyvsp[-7].str) + "++) {\n"); 
         delete (yyvsp[-7].str); delete (yyvsp[-3].str);
-        std::cerr << "Entro a FIR statement \n";
+        //std::cerr << "Entro a FIR statement \n";
     }
 #line 1634 "parser.cpp"
     break;
@@ -1637,7 +1637,7 @@ yyreduce:
 #line 198 "parser.y"
                                                                 {
       std::string funcName = *(yyvsp[-5].str);
-      std::cerr << "Entro a DEF procedure \n";
+      //std::cerr << "Entro a DEF procedure \n";
       // Verificar si la función ya existe en la tabla de símbolos
       if (symbol_table.find(funcName) != symbol_table.end()) {
           std::cerr << "Error: La función '" << funcName << "' ya ha sido declarada. Línea: " << (yylsp[-5]).first_line << std::endl;
@@ -1664,13 +1664,13 @@ yyreduce:
 #line 220 "parser.y"
                                                     {
       std::string funcName = *(yyvsp[-4].str);
-      std::cerr << "Entro a llamada Proc \n";
-      std::cerr << "argument list: " << *(yyvsp[-2].str) << " \n";
+      //std::cerr << "Entro a llamada Proc \n";
+      //std::cerr << "argument list: " << *$3 << " \n";
       if (symbol_table.find(funcName) == symbol_table.end()) {
         std::cerr << "Error: La función '" << funcName << "' no ha sido declarada. Línea: " << (yylsp[-4]).first_line << std::endl;
         YYERROR;
       } else {
-        std::cerr << "Entro a la escritura de la llamada \n";
+        //std::cerr << "Entro a la escritura de la llamada \n";
         (yyval.str) = new std::string(*(yyvsp[-4].str) + "(" + *(yyvsp[-2].str) + ");\n");
       }
       delete (yyvsp[-4].str); delete (yyvsp[-2].str);
@@ -1681,15 +1681,15 @@ yyreduce:
   case 16: /* statement: PRINT LPAREN expression RPAREN NEWLINE  */
 #line 233 "parser.y"
                                             {
-        std::cerr << "Entro a PRINT \n";      
+        //std::cerr << "Entro a PRINT \n";      
         std::string printFormat;
         std::string expressionStr = *(yyvsp[-2].str);
             
         if (tipo_actual == 4) { // Es un STRING
             printFormat = "printf(" + expressionStr + ");\n";
-            std::cerr << "Entro a es un string\n";   
+            //std::cerr << "Entro a es un string\n";   
         } else if (tipo_actual == 6) { // Es un IDENTIFIER
-              std::cerr << "Entro a es un ID \n";           
+              //std::cerr << "Entro a es un ID \n";           
             if (symbol_table.find(expressionStr) != symbol_table.end()) {
                 std::string type = symbol_table[expressionStr];
                 if (type == "int" || type == "const int") {
@@ -1699,15 +1699,15 @@ yyreduce:
                 } else if (type == "double") {
                     printFormat = "printf(\"%lf\", " + expressionStr + ");\n";
                 }else{
-                  std::cerr << "Warning: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  std::cerr << "WARNING: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
                   printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
                 }
             } else {
-                std::cerr << "Warning: Variable " << expressionStr << " no encontrada en la tabla de símbolos." << ". En linea: " << yylineno << std::endl;
+                std::cerr << "WARNING: Variable " << expressionStr << " no encontrada en la tabla de símbolos." << ". En linea: " << yylineno << std::endl;
                 printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
             }
         } else {
-                  std::cerr << "Warning: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  std::cerr << "WARNING: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
                   printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
           }
         tipo_actual = 0;
@@ -2036,19 +2036,19 @@ yyreduce:
 
   case 67: /* ifelse: IF conditionalExpr COLON NEWLINE  */
 #line 368 "parser.y"
-                                     {  (yyval.str) = new std::string("if(" + *(yyvsp[-2].str) + ") {\n"); delete (yyvsp[-2].str); std::cerr << "Entro a IF \n";}
+                                     {  (yyval.str) = new std::string("if(" + *(yyvsp[-2].str) + ") {\n"); delete (yyvsp[-2].str);}
 #line 2041 "parser.cpp"
     break;
 
   case 68: /* ifelse: ELSE COLON NEWLINE  */
 #line 369 "parser.y"
-                       { (yyval.str) = new std::string("else {\n"); std::cerr << "Entro a ELSE \n";}
+                       { (yyval.str) = new std::string("else {\n");}
 #line 2047 "parser.cpp"
     break;
 
   case 69: /* ifelse: ELIF conditionalExpr COLON NEWLINE  */
 #line 370 "parser.y"
-                                       {  (yyval.str) = new std::string("else if(" + *(yyvsp[-2].str) + ") {"); delete (yyvsp[-2].str); std::cerr << "Entro a ELIF statement \n";}
+                                       {  (yyval.str) = new std::string("else if(" + *(yyvsp[-2].str) + ") {"); delete (yyvsp[-2].str);}
 #line 2053 "parser.cpp"
     break;
 

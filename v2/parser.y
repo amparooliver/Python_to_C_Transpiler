@@ -225,7 +225,7 @@ statement
         std::cerr << "Error: La función '" << funcName << "' no ha sido declarada. Línea: " << @1.first_line << std::endl;
         YYERROR;
       } else {
-        std::cerr << "Entro a la escritura de la llamada \n";
+        //std::cerr << "Entro a la escritura de la llamada \n";
         $$ = new std::string(*$1 + "(" + *$3 + ");\n");
       }
       delete $1; delete $3;
@@ -239,7 +239,7 @@ statement
             printFormat = "printf(" + expressionStr + ");\n";
             //std::cerr << "Entro a es un string\n";   
         } else if (tipo_actual == 6) { // Es un IDENTIFIER
-              std::cerr << "Entro a es un ID \n";           
+              //std::cerr << "Entro a es un ID \n";           
             if (symbol_table.find(expressionStr) != symbol_table.end()) {
                 std::string type = symbol_table[expressionStr];
                 if (type == "int" || type == "const int") {
@@ -249,15 +249,15 @@ statement
                 } else if (type == "double") {
                     printFormat = "printf(\"%lf\", " + expressionStr + ");\n";
                 }else{
-                  std::cerr << "Warning: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  std::cerr << "WARNING: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
                   printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
                 }
             } else {
-                std::cerr << "Warning: Variable " << expressionStr << " no encontrada en la tabla de símbolos." << ". En linea: " << yylineno << std::endl;
+                std::cerr << "WARNING: Variable " << expressionStr << " no encontrada en la tabla de símbolos." << ". En linea: " << yylineno << std::endl;
                 printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
             }
         } else {
-                  std::cerr << "Warning: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  std::cerr << "WARNING: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
                   printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
           }
         tipo_actual = 0;
