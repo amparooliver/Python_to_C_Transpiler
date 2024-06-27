@@ -1,5 +1,5 @@
 # Python_to_C_Transpiler
-Este proyecto implementa un esquema de traducción que permite convertir código escrito en Python a código en C.
+Proyecto final de Compiladores; implementa un esquema de traducción que permite convertir código escrito en Python a código en C. Las funcionalidades y limitaciones se encuentran en la documentacion TP_Oliver_Py2C.pdf.
 
 ## Uso
 ### Compilación y Ejecución de la V2
