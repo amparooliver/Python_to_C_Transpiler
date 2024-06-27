@@ -230,6 +230,42 @@ statement
       }
       delete $1; delete $3;
     }
+    | PRINT LPAREN expression RPAREN NEWLINE{
+        std::cerr << "Entro a PRINT \n";      
+        std::string printFormat;
+        std::string expressionStr = *$3;
+            
+        if (tipo_actual == 4) { // Es un STRING
+            printFormat = "printf(" + expressionStr + ");\n";
+            std::cerr << "Entro a es un string\n";   
+        } else if (tipo_actual == 6) { // Es un IDENTIFIER
+              std::cerr << "Entro a es un ID \n";           
+            if (symbol_table.find(expressionStr) != symbol_table.end()) {
+                std::string type = symbol_table[expressionStr];
+                if (type == "int" || type == "const int") {
+                    printFormat = "printf(\"%d\", " + expressionStr + ");\n";
+                } else if (type == "float") {
+                    printFormat = "printf(\"%f\", " + expressionStr + ");\n";
+                } else if (type == "double") {
+                    printFormat = "printf(\"%lf\", " + expressionStr + ");\n";
+                }else{
+                  std::cerr << "Warning: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
+                }
+            } else {
+                std::cerr << "Warning: Variable " << expressionStr << " no encontrada en la tabla de símbolos." << ". En linea: " << yylineno << std::endl;
+                printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
+            }
+        } else {
+                  std::cerr << "Warning: No se puede imprimir la variable \"" << expressionStr << "\"." << ". En linea: " << yylineno << std::endl;
+                  printFormat = "// printf(\"%?\", " + expressionStr + "); // Print no valido en C, revisar si afecta el flujo \n";
+          }
+        tipo_actual = 0;
+        tipo_actual2 = 0;
+        tipo_actual3 = 0;
+        $$ = new std::string(printFormat);
+        delete $3;
+    }
     | UNKNOWN NEWLINE{
       std::cerr << "Error: Simbolo desconocido: " << $1 << ". En linea: " << yylineno << std::endl;
       std::cerr << "No se traslado a la traduccion " << std::endl;
@@ -342,5 +378,5 @@ flowcontrol
 
 void yyerror(YYLTYPE* loc, const char* err) {
   std::cerr << "Error de sintaxis en la línea "  << yylineno << std::endl;
-  exit(1);
+  //exit(1);
 }

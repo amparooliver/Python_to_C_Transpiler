@@ -1355,7 +1355,7 @@ YY_RULE_SETUP
 case 29:
 YY_RULE_SETUP
 #line 152 "scanner.l"
-{ PUSH_TOKEN((yylval.token = DEF));}
+{ PUSH_TOKEN((yylval.token = PRINT));}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
