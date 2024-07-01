@@ -16,6 +16,7 @@ g++ main.cpp parser.cpp scanner.cpp -o parser
 
 ```
 3. Testing:
+OJO: Cada test.py, antes de probarlo,se debe guardar los archivos con una linea en blanco (UN ENTER) despues de la ultima linea de codigo para que funcionen correctamente.
 ```
 ./parser< test_files/test1.py
 ```
